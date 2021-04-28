@@ -3,6 +3,7 @@ package middleTermProject;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,12 @@ public class TestManager {
         switch(select) {
             case 1 :
                 System.out.println("\n---------- 로그인 화면 -----------\n");
-                login();
+                if(login()){
+                    System.out.println("로그인성공");
+                    modify();
+                }else{
+                    mainMemu();
+                }
                 break;
             case 2 :
                 System.out.println("\n---------- 회원가입 화면 -----------\n");
@@ -81,6 +87,7 @@ public class TestManager {
                 profile.close();
 
                 System.out.println("-----> 회원 정보 등록 성공 ");
+                mainMemu();
             } catch(IOException e) {  System.out.println("-----> 등록 실패 "); e.printStackTrace(); }
 
             System.out.println("\n----->  회원가입이 성공적으로 이루어졌습니다.");
@@ -94,7 +101,7 @@ public class TestManager {
     }
 
     // 로그인
-    public void login(){
+    public Boolean login(){
         Scanner sc = new Scanner(System.in);
         String[] userInput = {"아이디","비번"};
         String[] userInfo = new String[userInput.length];
@@ -123,20 +130,33 @@ public class TestManager {
 
                 // 비밀번호가 맞았을 경우
                 if(profileSplit[1].equals(userInfo[1])){
-                    System.out.println("——> 로그인이 성공적으로 이루어졌습니다.");
+                    System.out.println("——> 로그인이 성공적으로 이루어졌습니다.\n");
+                    UserManagment.accessedId = new User();
+                    UserManagment.accessedId.setId(userInfo[0]);
+                    UserManagment.accessedId.setPwd(profileSplit[1]);
+                    UserManagment.accessedId.setName(profileSplit[2]);
+                    UserManagment.accessedId.setPhone(profileSplit[3]);
+                    UserManagment.accessedId.setAddress(profileSplit[4]);
+                    profile.close();
+                    users.close();
+                    return true;
                 }
                 else {
                     // 비밀번호가 틀렸을 경우
-                    System.out.println("——> 비밀번호가 틀렸습니다.");
+                    System.out.println("——> 비밀번호가 틀렸습니다.\n");
+                    profile.close();
+                    users.close();
+                    return false;
                 }
-                profile.close();
             }else {
                 // 아이디가 없을 경우
-                System.out.println("——> 등록되지 않은 아이디입니다. ");
+                System.out.println("——> 등록되지 않은 아이디입니다. \n");
+                users.close();
+                return false;
             }
-            users.close();
         }catch (IOException e){
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -210,6 +230,65 @@ public class TestManager {
         }catch (IOException e){
             e.printStackTrace();
         }
-
     }
+
+    public void modify(){
+        String profilePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/UserInfo/Profile/" + UserManagment.accessedId.getId() + "'s Info.txt";
+        File inputFile = new File(profilePwd);
+        File outputFile = new File(profilePwd+".temp");
+        FileInputStream fileInputStream = null;
+        BufferedReader bufferedReader = null;
+        FileOutputStream fileOutputStream = null;
+        BufferedWriter bufferedWriter = null;
+        boolean result = false;
+
+        try {
+            fileInputStream = new FileInputStream(inputFile);
+            fileOutputStream = new FileOutputStream(outputFile);
+            bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            Scanner sc = new Scanner(System.in);
+            String line;
+            String repLine;
+
+            String originalString = UserManagment.accessedId.getPwd();
+            System.out.print("변경할 비밀번호를 입력하세요 : ");
+            String replaceString = sc.next();
+            UserManagment.accessedId.setPwd(replaceString);
+
+            while ((line = bufferedReader.readLine()) != null) {
+                repLine = line.replaceAll(originalString, replaceString);
+                bufferedWriter.write(repLine, 0, repLine.length());
+                bufferedWriter.newLine();
+            }
+            result = true;
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                bufferedReader.close();
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+            try{
+                bufferedWriter.close();
+            }catch (IOException ex1){
+                ex1.printStackTrace();
+            }
+            if(result){
+                inputFile.delete();
+                outputFile.renameTo(new File(profilePwd));
+            }
+
+        }
+
+
+        // Files.write(Files.createFile(Paths.get("mytest.txt")), contents.replaceFirst("HOME", "HOUSE").getBytes())
+//        System.out.println(UserManagment.accessedId.getId());
+//        System.out.println(UserManagment.accessedId.getPwd());
+//        System.out.println(UserManagment.accessedId.getName());
+//        System.out.println(UserManagment.accessedId.getPhone());
+//        System.out.println(UserManagment.accessedId.getAddress());
+    }
+
 }

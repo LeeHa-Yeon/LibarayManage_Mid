@@ -1,6 +1,5 @@
 package middleTermProject;
 
-import org.apache.catalina.User;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -8,6 +7,7 @@ import java.io.IOException;
 
 public class UserManagment implements UserDao {
 
+    public static User accessedId = null;
 
 //    // 회원 등록
 //    public void newUser(String id, String pwd, String name, String phone, String address, Integer borrowed_book ) {

@@ -24,6 +24,7 @@ public class User {
     // 처음엔 이거 0 으로 초기화
     private int borrowed_book;
 
+
     public String getId() {
         return id;
     }
