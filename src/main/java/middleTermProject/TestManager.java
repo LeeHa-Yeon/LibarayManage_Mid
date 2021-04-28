@@ -23,7 +23,7 @@ public class TestManager {
         switch(select) {
             case 1 :
                 System.out.println("\n---------- 로그인 화면 -----------\n");
-                //login();
+                login();
                 break;
             case 2 :
                 System.out.println("\n---------- 회원가입 화면 -----------\n");
@@ -37,8 +37,8 @@ public class TestManager {
         }
     }
 
+    // 회원가입
     public void register(){
-
         User user = new User();
         Scanner sc = new Scanner(System.in);
         String[] userInput = {"아이디","비번","비번확인","이름","폰번호","주소"};
@@ -79,6 +79,53 @@ public class TestManager {
             System.out.println("\n-----> 비밀번호가 일치하지않습니다. 다시 입력해주세요 ");
             System.out.println("\n---------- 회원가입 화면 -----------\n");
             register();
+        }
+    }
+
+    // 로그인
+    public void login(){
+        Scanner sc = new Scanner(System.in);
+        String[] userInput = {"아이디","비번"};
+        String[] userInfo = new String[userInput.length];
+
+        for(int i =0; i<userInput.length; i++){
+            System.out.print(userInput[i]+" : ");
+            userInfo[i] = sc.next();
+        }
+        try {
+            String usersPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/UserInfo/allUserInfo.txt";
+            BufferedReader users = new BufferedReader(new FileReader(usersPwd));
+            String userList = users.readLine();
+            List<String> idList = new ArrayList<String>();
+
+            while ((userList = users.readLine()) != null) {
+                String[] userSplit = userList.split("/");
+                idList.add(userSplit[0]);
+            }
+
+            // 아이디가 일치했을 경우
+            if (idList.contains(userInfo[0])){
+                String profilePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/UserInfo/Profile/" + userInfo[0] + "'s Info.txt";
+                BufferedReader profile = new BufferedReader(new FileReader(profilePwd));
+                String profileList = profile.readLine();
+                String[] profileSplit = profileList.split("/");
+
+                // 비밀번호가 맞았을 경우
+                if(profileSplit[1].equals(userInfo[1])){
+                    System.out.println("——> 로그인이 성공적으로 이루어졌습니다.");
+                }
+                else {
+                    // 비밀번호가 틀렸을 경우
+                    System.out.println("——> 비밀번호가 틀렸습니다.");
+                }
+                profile.close();
+            }else {
+                // 아이디가 없을 경우
+                System.out.println("——> 등록되지 않은 아이디입니다. ");
+            }
+            users.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 }
