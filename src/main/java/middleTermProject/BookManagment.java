@@ -9,7 +9,9 @@ public class BookManagment {
 
     public void bookMemu(){
         int select;
+
         Scanner sc = new Scanner(System.in);
+        Scanner sc1 = new Scanner(System.in);
         System.out.println("----------------- Book 관리 목록창 -----------------");
         System.out.println("\t\t\t\t1. 책 목록보기\n  \t\t\t\t2. 책 정보보기\n  \t\t\t\t3. 책 추가하기\n  \t\t\t\t4. 책 수정하기\n  \t\t\t\t5. 책 삭제하기\n  \t\t\t\t0. 종료 ");
         System.out.println("------------------------------------------------");
@@ -17,9 +19,16 @@ public class BookManagment {
         select = sc.nextInt();
         switch(select) {
             case 1 :
+
                 // 책 정보 보기 추가하기
-                System.out.println("\n---------- 책 목록 화면 -----------\n");
+                System.out.println("\n-------------------------- 책 목록 화면 ---------------------------\n");
                 showBookList();
+                System.out.print("목록창으로 돌아가시겠습니까(yes or no)?");
+                String answer = sc1.nextLine();
+                if(answer.equals("yes")){
+                    System.out.println("");
+                    bookMemu();
+                }
                 break;
             case 2 :
                 System.out.println("\n---------- 책 정보보기 -----------\n");
@@ -44,11 +53,39 @@ public class BookManagment {
     }
 
     public void showBookList(){
+        try {
+            String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
+            BufferedReader booksList = new BufferedReader(new FileReader(booksPwd));
+            String bookList = booksList.readLine();
+
+            System.out.println("  도서번호 ㅣ           제목            ㅣ 지은이 ㅣ 출판사 ㅣ   카테고리");
+
+            while ((bookList = booksList.readLine()) != null) {
+                String[] bookSplit = bookList.split("/");
+                System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
+                if(bookSplit[2].length()<7){
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                }else if(bookSplit[2].length()>7 && bookSplit[2].length()<13){
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                }
+                else {
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                }
+            }
+            System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽");
+            System.out.println("");
+
+
+
+        }catch(IOException e) {  System.out.println("-----> 보기 실패 "); e.printStackTrace(); }
 
 
     }
 
     public void showBookInfo(){
+        Book book = new Book();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("");
 
     }
 
@@ -98,7 +135,7 @@ public class BookManagment {
             }
             else if(isbnList.contains(Integer.parseInt(newBook[0])) && !(titleList.get(index)).equals(newBook[2])) {
 
-                System.out.println("\n-----> "+newBook[1]+"은 "+ titleList.get(index)+"의 isbn번호입니다.");
+                System.out.println("\n-----> "+newBook[0]+"은 "+ titleList.get(index)+"의 isbn번호입니다.");
                 System.out.println("-----> 일련번호에 맞는 책을 등록해주세요\n");
             }
             else{
@@ -138,6 +175,8 @@ public class BookManagment {
 
         try {
             String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
+            String bookPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/" + bookInput + "'s Info.txt";
+
             BufferedReader booksList = new BufferedReader(new FileReader(booksPwd));
             String bookList = booksList.readLine();
             List<Integer> isbnList = new ArrayList<Integer>();
@@ -158,7 +197,6 @@ public class BookManagment {
             if(titleAllList.contains(bookInput)){
                 HashSet<Integer> temp = new HashSet<Integer>(isbnList);
                 ArrayList<Integer> isbnList2 = new ArrayList<Integer>(temp);
-//            System.out.println(isbnList+" "+idList+" "+isbnList2+" "+titleList);
                 System.out.println("\""+bookInput+"\"의 일련번호 : "+isbnList2);
                 System.out.print(bookInput+"의 삭제할 일련번호를 선택해주세요 :");
                 String isbnInput = sc.nextLine();
@@ -167,11 +205,61 @@ public class BookManagment {
                 String idInput = sc.nextLine();
 
                 if(idList.contains(Integer.parseInt(idInput))){
-                    System.out.print("일련번호가 "+isbnInput+"인"+bookInput+"책을 정말 삭제하시겠습니까(yes / no)? ");
+                    System.out.print("일련번호가 "+isbnInput+"인 \""+bookInput+"\"을 정말 삭제하시겠습니까(yes / no)? ");
                     String answer = sc.nextLine();
-                    if(answer.equals("yes")){
-                        // id에 해당하는 삭제할 책 코드 입력
-                        System.out.println("------> 해당 책을 삭제하였습니다.");
+                    if(answer.equals("yes")) {
+                        String tempPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/temp.txt";
+                        String tempPwd2 = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/temp2.text";
+
+                        File originfile = new File(booksPwd);
+                        File tempfile = new File(tempPwd);
+
+                        File originfile2 = new File(bookPwd);
+                        File tempfile2 = new File(tempPwd2);
+                       try {
+                            BufferedReader bL = new BufferedReader(new InputStreamReader(new FileInputStream(originfile)));
+                            BufferedWriter wL = new BufferedWriter(new FileWriter(tempPwd));
+                            BufferedReader bL2 = new BufferedReader(new InputStreamReader(new FileInputStream(originfile2)));
+                            BufferedWriter wL2 = new BufferedWriter(new FileWriter(tempPwd2));
+
+                            String line=bL.readLine();
+                            String line2;
+
+                            wL.write("0/00/책이름/저자/출판사/카테고리/1/대여가능여부/예약중인지\n");
+                           while ((line = bL.readLine()) != null) {
+                               String[] bookSplit = line.split("/");
+                               if(!idInput.equals(bookSplit[1])){
+//                                   System.out.println(Arrays.toString(bookSplit));
+                                   wL.write(line+"\n");
+                               }
+
+                               wL.flush();
+
+                           }
+
+                           wL.close();
+                           bL.close();
+                           originfile.delete();
+                           tempfile.renameTo(originfile);
+
+                           while ((line2 = bL2.readLine()) != null) {
+                               String[] bookSplit2 = line2.split("/");
+                               if(!idInput.equals(bookSplit2[1])){
+//                                   System.out.println(Arrays.toString(bookSplit2));
+                                   wL2.write(line2+"\n");
+                               }
+
+                               wL2.flush();
+
+                           }
+
+                           wL2.close();
+                           bL2.close();
+                           originfile2.delete();
+                           tempfile2.renameTo(originfile2);
+
+                           System.out.println("------> 해당 책을 삭제하였습니다.");
+                        }catch (Exception e) { e.printStackTrace(); }
                     }
                     else{
                         System.out.println("------> 취소되었습니다.");
@@ -183,15 +271,6 @@ public class BookManagment {
             }else{
                 System.out.println("------>  해당 책이 존재하지 않습니다.");
             }
-
-
-
-
-
-
-
-//            int index = titleList.indexOf(bookInput);
-
 
         }catch (IOException e){
             e.printStackTrace();

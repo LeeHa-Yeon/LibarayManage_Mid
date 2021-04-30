@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,40 +16,41 @@ public class UserManagment {
 
     // 해야할 것 : 회원 정보 읽기 , 회원 정보 수정
 
-    public void mainMemu(){
+    public void mainMemu() {
         int select;
         // 문자열을 읽어올 수 있음
         // Scanner의 객체 생성
         // System.in은 입력한 값을 바이트 단위로 읽는
         Scanner sc = new Scanner(System.in);
+        System.out.println("\n====> 로그인을 해주세요");
         System.out.println("----------------- 회원 관리 memu -----------------");
         System.out.println("\t\t\t\t1. 로그인\n  \t\t\t\t2. 회원가입\n  \t\t\t\t3. 아이디/비번 찾기\n  \t\t\t\t0. 종료 ");
         System.out.println("------------------------------------------------");
         System.out.print("\n 번호를 선택해주세요 : ");
         select = sc.nextInt();
-        switch(select) {
-            case 1 :
+        switch (select) {
+            case 1:
                 System.out.println("\n---------- 로그인 화면 -----------\n");
-                if(login()){
-                    System.out.println("로그인성공");
-                    modify();
-                }else{
+                if (login()) {
+                    loginMemu();
+
+                } else {
                     mainMemu();
                 }
                 break;
-            case 2 :
+            case 2:
                 System.out.println("\n---------- 회원가입 화면 -----------\n");
                 register();
                 break;
-            case 3 :
+            case 3:
                 System.out.println("\n---------- 아이디 비번 찾기 -----------\n");
                 System.out.print("1. 아이디 / 2.비번 찾기 : ");
                 int select2 = sc.nextInt();
-                if(select2==1){
+                if (select2 == 1) {
                     System.out.println("\n--------- 아이디 찾기 --------------");
                     find_id();
                     break;
-                }else {
+                } else {
                     System.out.println("\n-----------비밀번호 찾기------------");
                     find_pwd();
                     break;
@@ -61,14 +63,14 @@ public class UserManagment {
 
 
     // 회원가입
-    public void register(){
+    public void register() {
         User user = new User();
         Scanner sc = new Scanner(System.in);
-        String[] userInput = {"아이디","비번","비번확인","이름","폰번호","주소"};
+        String[] userInput = {"아이디", "비번", "비번확인", "이름", "폰번호", "주소"};
         String[] newUser = new String[userInput.length];
 
-        for(int i =0; i<userInput.length; i++){
-            System.out.print(userInput[i]+" 입력 : ");
+        for (int i = 0; i < userInput.length; i++) {
+            System.out.print(userInput[i] + " 입력 : ");
             newUser[i] = sc.next();
         }
 
@@ -85,8 +87,8 @@ public class UserManagment {
                 String profilePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + user.getId() + "'s Info.txt";
                 BufferedWriter profile = new BufferedWriter(new FileWriter(profilePwd, true));
                 // write 출력
-                users_w.write(String.format("%s/%s/%s/%s/%s",user.getId(),user.getPwd(),user.getName(),user.getPhone(),user.getAddress()));
-                profile.write(String.format("%s/%s/%s/%s/%s", user.getId(),user.getPwd(),user.getName(),user.getPhone(),user.getAddress()));
+                users_w.write(String.format("%s/%s/%s/%s/%s", user.getId(), user.getPwd(), user.getName(), user.getPhone(), user.getAddress()));
+                profile.write(String.format("%s/%s/%s/%s/%s", user.getId(), user.getPwd(), user.getName(), user.getPhone(), user.getAddress()));
                 // 개행 엔터역할
                 users_w.newLine();
                 profile.newLine();
@@ -99,26 +101,66 @@ public class UserManagment {
 
                 System.out.println("-----> 회원 정보 등록 성공 ");
                 mainMemu();
-            } catch(IOException e) {  System.out.println("-----> 등록 실패 "); e.printStackTrace(); }
+            } catch (IOException e) {
+                System.out.println("-----> 등록 실패 ");
+                e.printStackTrace();
+            }
 
             System.out.println("\n----->  회원가입이 성공적으로 이루어졌습니다.");
             System.out.println("-----------------------------------");
-        }
-        else {
+        } else {
             System.out.println("\n-----> 비밀번호가 일치하지않습니다. 다시 입력해주세요 ");
             System.out.println("\n---------- 회원가입 화면 -----------\n");
             register();
         }
     }
+    public void loginMemu(){
+        System.out.println("현재 로그인 상태 : "+UserManagment.accessedUser.getId()+"님");
+        System.out.println("------------------------------------------------");
+        System.out.println("\t\t\t\t1. 도서관 관리 시스템\n  \t\t\t\t2. 회원 정보 보기\n  \t\t\t\t3. 비밀번호 수정\n  \t\t\t\t0. 로그아웃 ");
+        System.out.println("------------------------------------------------");
+        System.out.print("\n 번호를 선택해주세요 : ");
+        Scanner sc = new Scanner(System.in);
+        int select3 = sc.nextInt();
+        if (select3 == 1) {
+            // 목록보기
+            System.out.println("목록보기");
+        } else if (select3 == 2) {
+            show_profile();
+            try {
+                System.out.println("5초 뒤에 다시 이전 화면으로 돌아갑니다.\n");
+                Thread.sleep(5000);
+            }catch (InterruptedException e){
+                System.err.format("IOException: %s%n", e);
+            }
+            loginMemu();
+        } else if (select3 == 3) {
+            if (pwd_modify()) {
+                System.out.println("----->  비밀번호를 변경하였습니다. \n");
+            } else {
+                System.out.println("----->  비밀번호가 틀렸습니다. \n");
+            }
+            loginMemu();
+        } else {
+            UserManagment.accessedUser = new User();
+            UserManagment.accessedUser.setId("로그인을 해주세요");
+            UserManagment.accessedUser.setPwd("로그인을 해주세요");
+            UserManagment.accessedUser.setName("로그인을 해주세요");
+            UserManagment.accessedUser.setPhone("로그인을 해주세요");
+            UserManagment.accessedUser.setAddress("로그인을 해주세요");
+            UserManagment.accessedUser.setBorrowed_book(0);
+            mainMemu();
+        }
+    }
 
     // 로그인  ---> 아이디 중복 제거하기 ( )
-    public Boolean login(){
+    public Boolean login() {
         Scanner sc = new Scanner(System.in);
-        String[] userInput = {"아이디","비번"};
+        String[] userInput = {"아이디", "비번"};
         String[] userInfo = new String[userInput.length];
 
-        for(int i =0; i<userInput.length; i++){
-            System.out.print(userInput[i]+" : ");
+        for (int i = 0; i < userInput.length; i++) {
+            System.out.print(userInput[i] + " : ");
             userInfo[i] = sc.next();
         }
         try {
@@ -133,14 +175,14 @@ public class UserManagment {
             }
 
             // 아이디가 일치했을 경우
-            if (idList.contains(userInfo[0])){
+            if (idList.contains(userInfo[0])) {
                 String profilePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + userInfo[0] + "'s Info.txt";
                 BufferedReader profile = new BufferedReader(new FileReader(profilePwd));
                 String profileList = profile.readLine();
                 String[] profileSplit = profileList.split("/");
 
                 // 비밀번호가 맞았을 경우
-                if(profileSplit[1].equals(userInfo[1])){
+                if (profileSplit[1].equals(userInfo[1])) {
                     System.out.println("——> 로그인이 성공적으로 이루어졌습니다.\n");
                     UserManagment.accessedUser = new User();
                     UserManagment.accessedUser.setId(userInfo[0]);
@@ -152,28 +194,36 @@ public class UserManagment {
                     profile.close();
                     users.close();
                     return true;
-                }
-                else {
+                } else {
                     // 비밀번호가 틀렸을 경우
                     System.out.println("——> 비밀번호가 틀렸습니다.\n");
                     profile.close();
                     users.close();
                     return false;
                 }
-            }else {
+            } else {
                 // 아이디가 없을 경우
                 System.out.println("——> 등록되지 않은 아이디입니다. \n");
                 users.close();
                 return false;
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    public void show_profile() {
+        System.out.println("\n---> "+UserManagment.accessedUser.getName()+"의 회원 정보");
+            System.out.println("  \n  아이디\t ㅣ  이름   ㅣ 핸드폰 번호\t ㅣ 주소 ㅣ 빌린책 개수 ");
+            System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
+
+            System.out.println(" "+UserManagment.accessedUser.getId()+"\t   "+UserManagment.accessedUser.getName()+"\t\t"+UserManagment.accessedUser.getPhone()+"\t\t"+UserManagment.accessedUser.getAddress()+"\t\t"+UserManagment.accessedUser.getBorrowed_book());
+            System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
+    }
+
     // 아이디,비번 찾기
-    public void find_id(){
+    public void find_id() {
         Scanner sc = new Scanner(System.in);
         System.out.print("\n전화번호를 입력하세요 :");
         String userInput = sc.next();
@@ -196,19 +246,18 @@ public class UserManagment {
                 System.out.print("\n---------> 찾는 아이디 : ");
                 System.out.println(idList.get(index));
                 System.out.println("");
-            }
-            else{
+            } else {
                 // 없다면
                 System.out.println("\n------> 찾는 아이디가 없습니다.\n");
             }
             mainMemu();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void find_pwd(){
+    public void find_pwd() {
 
         Scanner sc = new Scanner(System.in);
         System.out.print("\n아이디를 입력하세요 :");
@@ -232,75 +281,116 @@ public class UserManagment {
                 System.out.print("\n---------> 찾는 비밀번호 : ");
                 System.out.println(pwdList.get(index));
                 System.out.println("");
-            }
-            else{
+            } else {
                 // 없다면
                 System.out.println("\n------> 존재하지 않는 아이디입니다.\n");
             }
             mainMemu();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void modify(){
-        String profilePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserManagment.accessedUser.getId() + "'s Info.txt";
-        File inputFile = new File(profilePwd);
-        File outputFile = new File(profilePwd+".temp");
-        FileInputStream fileInputStream = null;
-        BufferedReader bufferedReader = null;
-        FileOutputStream fileOutputStream = null;
-        BufferedWriter bufferedWriter = null;
+    public boolean pwd_modify() {
+        String usersPath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt";
+        String profilePath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserManagment.accessedUser.getId() + "'s Info.txt";
+
+        File originFile_a = new File(usersPath);
+        File originFile = new File(profilePath);
+        File tempFile_a = new File(usersPath + ".temp");
+        File tempFile = new File(profilePath + ".temp");
+        FileInputStream fileOriginStream = null;
+        BufferedReader br = null;
+        FileOutputStream fileTempStream = null;
+        BufferedWriter bw = null;
+        FileInputStream fileOriginStream2 = null;
+        BufferedReader br2 = null;
+        FileOutputStream fileTempStream2 = null;
+        BufferedWriter bw2 = null;
+
         boolean result = false;
 
         try {
-            fileInputStream = new FileInputStream(inputFile);
-            fileOutputStream = new FileOutputStream(outputFile);
-            bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
             Scanner sc = new Scanner(System.in);
+            fileOriginStream = new FileInputStream(originFile);
+            fileTempStream = new FileOutputStream(tempFile);
+            br = new BufferedReader(new InputStreamReader(fileOriginStream));
+            bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+            fileOriginStream2 = new FileInputStream(originFile_a);
+            fileTempStream2 = new FileOutputStream(tempFile_a);
+            br2 = new BufferedReader(new InputStreamReader(fileOriginStream2));
+            bw2 = new BufferedWriter(new OutputStreamWriter(fileTempStream2));
+
             String line;
             String repLine;
+            String line2;
+            String repLine2;
 
-            String originalString = UserManagment.accessedUser.getPwd();
-            System.out.print("변경할 비밀번호를 입력하세요 : ");
-            String replaceString = sc.next();
-            UserManagment.accessedUser.setPwd(replaceString);
+            String presentPWD = UserManagment.accessedUser.getPwd();
+            System.out.print("현재 비밀번호를 입력하세요 : ");
+            String inputPWD = sc.next();
 
-            while ((line = bufferedReader.readLine()) != null) {
-                repLine = line.replaceAll(originalString, replaceString);
-                bufferedWriter.write(repLine, 0, repLine.length());
-                bufferedWriter.newLine();
+            if (inputPWD.equals(presentPWD)) {
+                System.out.print("변경할 비밀번호를 입력하세요 : ");
+                String replacePWD = sc.next();
+                UserManagment.accessedUser.setPwd(replacePWD);
+
+                while ((line = br.readLine()) != null) {
+                    repLine = line.replaceAll(presentPWD, replacePWD);
+                    bw.write(repLine, 0, repLine.length());
+                    bw.newLine();
+                }
+                while ((line2 = br2.readLine()) != null) {
+                    String[] userSplit = line2.split("/");
+                    if(userSplit[0].equals(UserManagment.accessedUser.getId())) {
+                        repLine2 = line2.replaceAll(presentPWD, replacePWD);
+                        bw2.write(repLine2, 0, repLine2.length());
+                        bw2.newLine();
+                    }else{
+                        bw2.write(line2+"\n");
+                    }
+                }
+
+                result = true;
+            } else {
+                result = false;
             }
-            result = true;
-        }catch (IOException e){
+
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally{
-            try{
-                bufferedReader.close();
-            }catch (IOException ex){
+        } finally {
+            try {
+                br.close();
+                br2.close();
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            try{
-                bufferedWriter.close();
-            }catch (IOException ex1){
+            try {
+                bw.close();
+                bw2.close();
+            } catch (IOException ex1) {
                 ex1.printStackTrace();
             }
-            if(result){
-                inputFile.delete();
-                outputFile.renameTo(new File(profilePwd));
+            if (result) {
+                originFile.delete();
+                tempFile.renameTo(originFile);
+                originFile_a.delete();
+                tempFile_a.renameTo(originFile_a);
             }
 
         }
+        return result;
+    }
+}
 
 
-        // Files.write(Files.createFile(Paths.get("mytest.txt")), contents.replaceFirst("HOME", "HOUSE").getBytes())
+// Files.write(Files.createFile(Paths.get("mytest.txt")), contents.replaceFirst("HOME", "HOUSE").getBytes())
 //        System.out.println(UserManagment.accessedId.getId());
 //        System.out.println(UserManagment.accessedId.getPwd());
 //        System.out.println(UserManagment.accessedId.getName());
 //        System.out.println(UserManagment.accessedId.getPhone());
 //        System.out.println(UserManagment.accessedId.getAddress());
-    }
 
-}
+
+
