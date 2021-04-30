@@ -13,7 +13,7 @@ public class BookManagment {
         Scanner sc = new Scanner(System.in);
         Scanner sc1 = new Scanner(System.in);
         System.out.println("----------------- Book 관리 목록창 -----------------");
-        System.out.println("\t\t\t\t1. 책 목록보기\n  \t\t\t\t2. 책 정보보기\n  \t\t\t\t3. 책 추가하기\n  \t\t\t\t4. 책 수정하기\n  \t\t\t\t5. 책 삭제하기\n  \t\t\t\t0. 종료 ");
+        System.out.println("\t\t\t\t1. 도서 목록보기\n  \t\t\t\t2. 도서 검색하기\n  \t\t\t\t3. 책 추가하기\n  \t\t\t\t4. 책 수정하기\n  \t\t\t\t5. 책 삭제하기\n  \t\t\t\t0. 종료 ");
         System.out.println("------------------------------------------------");
         System.out.print("\n 번호를 선택해주세요 : ");
         select = sc.nextInt();
@@ -23,7 +23,7 @@ public class BookManagment {
                 // 책 정보 보기 추가하기
                 System.out.println("\n-------------------------- 책 목록 화면 ---------------------------\n");
                 showBookList();
-                System.out.print("목록창으로 돌아가시겠습니까(yes or no)?");
+                System.out.print("목록창으로 돌아가시려면 yes를 입력해주세요 : ");
                 String answer = sc1.nextLine();
                 if(answer.equals("yes")){
                     System.out.println("");
@@ -32,19 +32,24 @@ public class BookManagment {
                 break;
             case 2 :
                 System.out.println("\n---------- 책 정보보기 -----------\n");
-                showBookInfo();
+                search_Book();
+                bookMemu();
                 break;
             case 3 :
                 System.out.println("\n---------- 책 추가하기 -----------\n");
                 addBook();
+                bookMemu();
                 break;
             case 4 :
                 System.out.println("\n---------- 책 수정하기 -----------\n");
-                updateBook();
+                showBookInfo();
+                //updateBook();
+                bookMemu();
                 break;
             case 5 :
                 System.out.println("\n---------- 책 삭제하기 -----------\n");
                 deleteBook();
+                bookMemu();
                 break;
             default:
                 System.out.println("종료");
@@ -63,9 +68,9 @@ public class BookManagment {
             while ((bookList = booksList.readLine()) != null) {
                 String[] bookSplit = bookList.split("/");
                 System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
-                if(bookSplit[2].length()<7){
+                if(bookSplit[2].length()<8){
                     System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
-                }else if(bookSplit[2].length()>7 && bookSplit[2].length()<13){
+                }else if(bookSplit[2].length()>8 && bookSplit[2].length()<13){
                     System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
                 }
                 else {
@@ -82,12 +87,70 @@ public class BookManagment {
 
     }
 
-    public void showBookInfo(){
+    public void search_Book(){
         Book book = new Book();
         Scanner sc = new Scanner(System.in);
-        System.out.println("");
+        System.out.print("검색할 도서 제목을 입력해주세요 : ");
+        String search_title = sc.nextLine();
+
+        try {
+            String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
+            BufferedReader booksList = new BufferedReader(new FileReader(booksPwd));
+            String bookList = booksList.readLine();
+
+            System.out.println("  도서번호 ㅣ           제목            ㅣ 지은이 ㅣ 출판사 ㅣ   카테고리");
+
+            while ((bookList = booksList.readLine()) != null) {
+                String[] bookSplit = bookList.split("/");
+                if(search_title.equals(bookSplit[2])) {
+                    System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
+                    if (bookSplit[2].length() < 8) {
+                        System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                    } else if (bookSplit[2].length() > 8 && bookSplit[2].length() < 13) {
+                        System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                    } else {
+                        System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t");
+                    }
+                }
+            }
+            System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽");
+            System.out.println("");
+
+
+        }catch(IOException e) {  System.out.println("-----> 보기 실패 "); e.printStackTrace(); }
 
     }
+    public void showBookInfo() {
+        Book book = new Book();
+        Scanner sc = new Scanner(System.in);
+        String[] bookSchema = {"isbn","도서번호","책 제목","지은이","출판사","카테고리","재고","대여가능여부","예약상태"};
+        System.out.print("해당 책의 자세한 정보를 원하시면 도서번호를 입력해주세요 : ");
+        String input_bookId = sc.nextLine();
+
+
+        try {
+            String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
+            BufferedReader booksList = new BufferedReader(new FileReader(booksPwd));
+            String bookList = booksList.readLine();
+
+            while ((bookList = booksList.readLine()) != null) {
+                String[] bookSplit = bookList.split("/");
+
+                if(bookSplit[1].equals(input_bookId)){
+                    for(int i =0; i<bookSchema.length; i++){
+                        System.out.println(bookSchema[i]+" : "+bookSplit[i]);
+
+                    }
+
+                }
+
+            }
+
+        }catch(IOException e) {  System.out.println("-----> 실패 "); e.printStackTrace(); }
+
+
+    }
+
 
     // 도서아이디, 도서번호, 책이름, 저자, 출판사, 카테고리, 책 재고, 대여가능여부, 예약중인지
     public void addBook(){
