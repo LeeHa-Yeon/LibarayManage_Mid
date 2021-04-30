@@ -10,9 +10,11 @@ public class LibraryApplication {
 
     public static void main(String[] args) {
         GenericApplicationContext ctx = new AnnotationConfigApplicationContext(JavaConfig.class);
-        TestManager testManager = (TestManager) ctx.getBean("testManager");
+        BookManagment bookManagment = (BookManagment) ctx.getBean("bookManagment");
+        UserManagment userManagment = (UserManagment) ctx.getBean("userManagment");
 
-        testManager.mainMemu();
+        //userManagment.mainMemu();
+        bookManagment.bookMemu();
 
         ctx.close();
     }

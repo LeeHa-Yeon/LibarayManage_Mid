@@ -8,8 +8,12 @@ import org.springframework.context.annotation.Configuration;
 public class JavaConfig {
 //
     @Bean
-    public TestManager testManager(){
-        return new TestManager();
+    public UserManagment userManagment(){
+        return new UserManagment();
+    }
+    @Bean
+    public BookManagment bookManagment(){
+        return new BookManagment();
     }
 //    @Bean
 //
