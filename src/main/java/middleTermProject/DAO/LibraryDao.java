@@ -8,7 +8,7 @@ public interface LibraryDao {
     // 도서 검색
 
     // 책 정보보기
-    public void showBookInfo();
+    //public void showBookInfo();
 
 
     // 도서 대여

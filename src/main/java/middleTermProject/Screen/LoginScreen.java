@@ -2,6 +2,7 @@ package middleTermProject.Screen;
 
 import middleTermProject.DAO.SystemDao;
 import middleTermProject.DTO.UserDto;
+import middleTermProject.System.LibraryManagerSystem;
 import middleTermProject.System.LoginSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,10 @@ public class LoginScreen implements SystemDao {
 
     @Autowired
     LoginSystem loginsystem;
+    @Autowired
+    LibraryManagerScreen libraryManagerScreen;
+    @Autowired
+    LibraryUserScreen libraryUserScreen;
 
     public static UserDto accessedUserDto = null;
 
@@ -38,9 +43,11 @@ public class LoginScreen implements SystemDao {
                     // 관리자인지 사용자인지에 따라 화면이 달라짐
                     if(!accessedUserDto.getId().equals("manager")) {
                         System.out.println("사용자인 경우 도서관 이용 시스템으로 이동");
+                        libraryUserScreen.memuPrint();
                         // 사용자인 경우 화면
                     }else{
                         System.out.println("관리자인 경우 도서관 관리 시스템으로 이동");
+                        libraryManagerScreen.memuPrint();
                         // 관리자인 경우 화면
                     }
                 }

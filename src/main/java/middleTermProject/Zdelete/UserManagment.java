@@ -68,7 +68,7 @@ public class UserManagment {
     }
 
 
-    // 회원가입 ---> 아이디 중복 제거하기 ( )
+    // 회원가입 ---> 아이디 중복 제거하기 ( o)
     public void register() {
         UserDto userDTO = new UserDto();
         Scanner sc = new Scanner(System.in);
@@ -243,11 +243,11 @@ public class UserManagment {
 
     public void show_profile() {
         System.out.println("\n---> "+UserManagment.accessedUserDto.getName()+"의 회원 정보");
-            System.out.println("  \n  아이디\t ㅣ  이름   ㅣ 핸드폰 번호\t ㅣ 주소 ㅣ 빌린책 개수 ");
-            System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
+        System.out.println("  \n  아이디\t ㅣ  이름   ㅣ 핸드폰 번호\t ㅣ 주소 ㅣ 빌린책 개수 ");
+        System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
 
-            System.out.println(" "+UserManagment.accessedUserDto.getId()+"\t   "+UserManagment.accessedUserDto.getName()+"\t\t"+UserManagment.accessedUserDto.getPhone()+"\t\t"+UserManagment.accessedUserDto.getAddress()+"\t\t"+UserManagment.accessedUserDto.getBorrowed_book());
-            System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
+        System.out.println(" "+UserManagment.accessedUserDto.getId()+"\t   "+UserManagment.accessedUserDto.getName()+"\t\t"+UserManagment.accessedUserDto.getPhone()+"\t\t"+UserManagment.accessedUserDto.getAddress()+"\t\t"+UserManagment.accessedUserDto.getBorrowed_book());
+        System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
     }
 
     // 아이디,비번 찾기

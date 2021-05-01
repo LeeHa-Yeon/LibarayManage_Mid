@@ -200,4 +200,17 @@ public class LoginSystem implements LoginDao {
             loginScreen.memuPrint();
         } catch (IOException e) { e.printStackTrace(); }
     }
+
+    @Override
+    public void logout() {
+        UserManagment.accessedUserDto = new UserDto();
+        UserManagment.accessedUserDto.setId("");
+        UserManagment.accessedUserDto.setPwd("");
+        UserManagment.accessedUserDto.setName("");
+        UserManagment.accessedUserDto.setPhone("");
+        UserManagment.accessedUserDto.setAddress("");
+        UserManagment.accessedUserDto.setBorrowed_book(0);
+        loginScreen.memuPrint();
+    }
+
 }

@@ -14,4 +14,7 @@ public interface LoginDao {
     // 비밀번호 찾기
     public void searchPwd();
 
+    // 로그아웃
+    public void logout();
+
 }
