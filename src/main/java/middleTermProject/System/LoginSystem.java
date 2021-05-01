@@ -3,7 +3,6 @@ package middleTermProject.System;
 import middleTermProject.DAO.LoginDao;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LoginScreen;
-import middleTermProject.Zdelete.UserManagment;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
@@ -49,13 +48,13 @@ public class LoginSystem implements LoginDao {
                 if (profileSplit[1].equals(userInput[1])) {
                     System.out.println("——> 로그인이 성공적으로 이루어졌습니다.\n");
                     // 회원 정보 불러오기
-                    UserManagment.accessedUserDto = new UserDto();
-                    UserManagment.accessedUserDto.setId(profileSplit[0]);
-                    UserManagment.accessedUserDto.setPwd(profileSplit[1]);
-                    UserManagment.accessedUserDto.setName(profileSplit[2]);
-                    UserManagment.accessedUserDto.setPhone(profileSplit[3]);
-                    UserManagment.accessedUserDto.setAddress(profileSplit[4]);
-                    UserManagment.accessedUserDto.setBorrowed_book(Integer.parseInt(profileSplit[5]));
+                    UserSystem.accessedUserDto = new UserDto();
+                    UserSystem.accessedUserDto.setId(profileSplit[0]);
+                    UserSystem.accessedUserDto.setPwd(profileSplit[1]);
+                    UserSystem.accessedUserDto.setName(profileSplit[2]);
+                    UserSystem.accessedUserDto.setPhone(profileSplit[3]);
+                    UserSystem.accessedUserDto.setAddress(profileSplit[4]);
+                    UserSystem.accessedUserDto.setBorrowed_book(Integer.parseInt(profileSplit[5]));
                     profile_br.close();
                     br.close();
                     return true;
@@ -203,14 +202,20 @@ public class LoginSystem implements LoginDao {
 
     @Override
     public void logout() {
-        UserManagment.accessedUserDto = new UserDto();
-        UserManagment.accessedUserDto.setId("");
-        UserManagment.accessedUserDto.setPwd("");
-        UserManagment.accessedUserDto.setName("");
-        UserManagment.accessedUserDto.setPhone("");
-        UserManagment.accessedUserDto.setAddress("");
-        UserManagment.accessedUserDto.setBorrowed_book(0);
-        loginScreen.memuPrint();
+        UserSystem.accessedUserDto = new UserDto();
+        UserSystem.accessedUserDto.setId("로그인을 해주세요");
+        UserSystem.accessedUserDto.setPwd("");
+        UserSystem.accessedUserDto.setName("");
+        UserSystem.accessedUserDto.setPhone("");
+        UserSystem.accessedUserDto.setAddress("");
+        UserSystem.accessedUserDto.setBorrowed_book(0);
+        try {
+            System.out.println("3초 뒤에 로그인 화면으로 이동합니다..\n");
+            Thread.sleep(3000);
+            loginScreen.memuPrint();
+        }catch (InterruptedException e){
+            System.err.format("IOException: %s%n", e);
+        }
     }
 
 }
