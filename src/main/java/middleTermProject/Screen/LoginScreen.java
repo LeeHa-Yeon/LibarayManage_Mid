@@ -43,11 +43,10 @@ public class LoginScreen implements SystemDao {
                 if (loginsystem.login()) {
                     // 관리자인지 사용자인지에 따라 화면이 달라짐
                     if(!UserSystem.accessedUserDto.getId().equals("manager")) {
-                        System.out.println("사용자인 경우 도서관 이용 시스템으로 이동");
                         libraryUserScreen.memuPrint();
                         // 사용자인 경우 화면
                     }else{
-                        System.out.println(UserSystem.accessedUserDto.getId()+"님이 입장하셨습니다.");
+                        System.out.println("\n"+UserSystem.accessedUserDto.getId()+"님이 입장하셨습니다.");
                         libraryManagerScreen.memuPrint();
                         // 관리자인 경우 화면
                     }

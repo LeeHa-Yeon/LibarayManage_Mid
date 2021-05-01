@@ -47,9 +47,13 @@ public class LibraryUserScreen implements SystemDao {
                     System.out.print("\n 번호를 선택해주세요 : ");
                     s = sc.nextInt();
                     if (s == 1) {
+                        librarySystem.showBookList();
                     } else if (s == 2) {
+                        librarySystem.searchBook();
                     } else if (s == 3) {
+                        librarySystem.showBookInfo();
                     } else if (s == 4) {
+                        System.out.println("잠시 대기");
                     }
                     break;
                 case 2:

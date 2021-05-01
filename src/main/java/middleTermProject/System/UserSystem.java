@@ -2,11 +2,16 @@ package middleTermProject.System;
 
 import middleTermProject.DAO.UserDao;
 import middleTermProject.DTO.UserDto;
+import middleTermProject.Screen.LibraryUserScreen;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.Scanner;
 
 public class UserSystem implements UserDao {
+
+    @Autowired
+    LibraryUserScreen libraryUserScreen;
 
     public static UserDto accessedUserDto = null;
 
@@ -106,10 +111,21 @@ public class UserSystem implements UserDao {
 
     @Override
     public void showProfile() {
+        Scanner sc = new Scanner(System.in);
         System.out.println("\n---> "+UserSystem.accessedUserDto.getName()+"의 회원 정보");
         System.out.println("  \n  아이디\t ㅣ  이름   ㅣ 핸드폰 번호\t ㅣ 주소 ㅣ 빌린책 개수 ");
         System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
         System.out.println(" "+UserSystem.accessedUserDto.getId()+"\t   "+UserSystem.accessedUserDto.getName()+"\t\t"+UserSystem.accessedUserDto.getPhone()+"\t\t"+UserSystem.accessedUserDto.getAddress()+"\t\t"+UserSystem.accessedUserDto.getBorrowed_book());
         System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
+
+        System.out.println("-----> 1. 회원 정보를 수정\t\t 2. 뒤로가기 \n");
+        System.out.print("-----> 선택해주세요 :");
+        int num = sc.nextInt();
+        if(num==1){
+            System.out.println("회원 정보 수정창으로 이동");
+        }else{
+            libraryUserScreen.memuPrint();
+        }
+
     }
 }
