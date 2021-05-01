@@ -1,12 +1,15 @@
-package middleTermProject;
+package middleTermProject.DTO;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 // 호출할때마다 새로운 녀석 만들어야 하므로
 @Scope("prototype")
-public class User {
+public class UserDto {
 
     private String id;
     private String pwd;
@@ -15,6 +18,8 @@ public class User {
     private String address;
     // 처음엔 이거 0 으로 초기화
     private int borrowed_book;
+    // 빌린 책 -> 책이름, 빌린날짜 ,반납날짜
+    private List<BookDto> lendBookList = new ArrayList<BookDto>();
 
 
     public String getId() {
@@ -65,7 +70,9 @@ public class User {
         this.borrowed_book = borrowed_book;
     }
 
+    public List<BookDto> getLendBookList() { return lendBookList; }
 
+    public void setLendBookList(List<BookDto> lendBookList) { this.lendBookList = lendBookList; }
 }
 
 

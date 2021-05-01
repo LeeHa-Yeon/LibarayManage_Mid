@@ -1,11 +1,8 @@
-package middleTermProject;
+package middleTermProject.DAO;
 
 public interface BookDao {
-    // 책 목록보기
-    public void showBookList();
 
-    // 책 정보보기
-    public void showBookInfo();
+    // 도서관 관리자만 접근 권한 가지고 있음
 
     // 책 추가하기
     public void addBook();

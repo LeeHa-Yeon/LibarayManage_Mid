@@ -1,11 +1,13 @@
 package middleTermProject;
 
+import middleTermProject.DTO.BookDto;
+
 import java.io.*;
 import java.util.*;
 
 public class BookManagment {
 
-    public static Book accessedBook = null;
+    public static BookDto accessedBookDto = null;
 
     public void bookMemu(){
         int select;
@@ -88,7 +90,7 @@ public class BookManagment {
     }
 
     public void search_Book(){
-        Book book = new Book();
+        BookDto bookDTO = new BookDto();
         Scanner sc = new Scanner(System.in);
         System.out.print("검색할 도서 제목을 입력해주세요 : ");
         String search_title = sc.nextLine();
@@ -121,7 +123,7 @@ public class BookManagment {
 
     }
     public void showBookInfo() {
-        Book book = new Book();
+        BookDto bookDTO = new BookDto();
         Scanner sc = new Scanner(System.in);
         String[] bookSchema = {"isbn","도서번호","책 제목","지은이","출판사","카테고리","재고","대여가능여부","예약상태"};
         System.out.print("해당 책의 자세한 정보를 원하시면 도서번호를 입력해주세요 : ");
@@ -155,7 +157,7 @@ public class BookManagment {
     // 도서아이디, 도서번호, 책이름, 저자, 출판사, 카테고리, 책 재고, 대여가능여부, 예약중인지
     public void addBook(){
 
-        Book book = new Book();
+        BookDto bookDTO = new BookDto();
 
         Scanner sc = new Scanner(System.in);
         String[] bookInput = {"isbn","도서고유번호","책이름","지은이","출판사","카테고리"};
@@ -165,15 +167,15 @@ public class BookManagment {
             System.out.print(bookInput[i]+" 입력 : ");
             newBook[i] = sc.nextLine();
         }
-        book.setBook_ISBN(Integer.parseInt(newBook[0]));
-        book.setBook_id(Integer.parseInt(newBook[1]));
-        book.setBook_title(newBook[2]);
-        book.setBook_author(newBook[3]);
-        book.setBook_publisher(newBook[4]);
-        book.setBook_stock(1);
-        book.setBook_category(newBook[5]);
-        book.setIs_book_borrowed(false);
-        book.setIs_book_reservation(false);
+        bookDTO.setBook_ISBN(Integer.parseInt(newBook[0]));
+        bookDTO.setBook_id(Integer.parseInt(newBook[1]));
+        bookDTO.setBook_title(newBook[2]);
+        bookDTO.setBook_author(newBook[3]);
+        bookDTO.setBook_publisher(newBook[4]);
+        bookDTO.setBook_stock(1);
+        bookDTO.setBook_category(newBook[5]);
+        bookDTO.setIs_book_borrowed(false);
+        bookDTO.setIs_book_reservation(false);
 
         try {
             String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
@@ -206,8 +208,8 @@ public class BookManagment {
                 String bookPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/" + newBook[2] + "'s Info.txt";
                 BufferedWriter book_w = new BufferedWriter(new FileWriter(bookPwd, true));
 
-                books_w.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b",book.getBook_ISBN(),book.getBook_id(),book.getBook_title(),book.getBook_author(),book.getBook_publisher(),book.getBook_category(),book.getBook_stock(),book.getIs_book_borrowed(),book.getIs_book_reservation()));
-                book_w.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b",book.getBook_ISBN(),book.getBook_id(),book.getBook_title(),book.getBook_author(),book.getBook_publisher(),book.getBook_category(),book.getBook_stock(),book.getIs_book_borrowed(),book.getIs_book_reservation()));
+                books_w.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b", bookDTO.getBook_ISBN(), bookDTO.getBook_id(), bookDTO.getBook_title(), bookDTO.getBook_author(), bookDTO.getBook_publisher(), bookDTO.getBook_category(), bookDTO.getBook_stock(), bookDTO.getIs_book_borrowed(), bookDTO.getIs_book_reservation()));
+                book_w.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b", bookDTO.getBook_ISBN(), bookDTO.getBook_id(), bookDTO.getBook_title(), bookDTO.getBook_author(), bookDTO.getBook_publisher(), bookDTO.getBook_category(), bookDTO.getBook_stock(), bookDTO.getIs_book_borrowed(), bookDTO.getIs_book_reservation()));
 
                 books_w.newLine();
                 book_w.newLine();

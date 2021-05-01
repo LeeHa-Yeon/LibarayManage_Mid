@@ -1,6 +1,8 @@
-package middleTermProject;
+package middleTermProject.DTO;
 
-public class Book {
+import java.util.Date;
+
+public class BookDto {
     // 도서번호, 책이름, 저자, 출판사, 카테고리, 책 재고, 대여가능여부, 예약중인지
     private int book_id;
     private int book_ISBN;  // 국제 표준 도서 번호
@@ -9,6 +11,8 @@ public class Book {
     private String book_publisher; // 출판사
     private String book_category;   // 카테고리
     private int book_stock;   // 책 재고
+    private Date lend_date;   // 빌린날짜
+    private Date return_date;  // 반납일자
     private Boolean is_book_borrowed;  // 대여가능여부
     private Boolean is_book_reservation;  // 예약중인지 아닌지
 
@@ -84,4 +88,20 @@ public class Book {
         this.is_book_reservation = is_book_reservation;
     }
 
+
+    public Date getLend_date() {
+        return lend_date;
+    }
+
+    public void setLend_date(Date lend_date) {
+        this.lend_date = lend_date;
+    }
+
+    public Date getReturn_date() {
+        return return_date;
+    }
+
+    public void setReturn_date(Date return_date) {
+        this.return_date = return_date;
+    }
 }
