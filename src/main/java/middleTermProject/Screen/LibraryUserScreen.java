@@ -47,13 +47,33 @@ public class LibraryUserScreen implements SystemDao {
                     System.out.print("\n 번호를 선택해주세요 : ");
                     s = sc.nextInt();
                     if (s == 1) {
+                        System.out.println("\n-------------------------- 도서 목록 화면 ---------------------------\n");
                         librarySystem.showBookList();
+                        System.out.println("-----> 1. 책 자세히 보기 \t\t 2. 뒤로가기 \n");
+                        System.out.print("-----> 선택해주세요 :");
+                        int num = sc.nextInt();
+                        if(num==1){
+                            librarySystem.showBookInfo();
+                        }else{
+                            memuPrint();
+                        }
                     } else if (s == 2) {
+                        System.out.println("\n-------------------------- 도서 검색 화면 ---------------------------\n");
                         librarySystem.searchBook();
+
+                        System.out.println("-----> 1. 책 자세히 보기 \t\t 2. 뒤로가기 \n");
+                        System.out.print("-----> 선택해주세요 :");
+                        int num = sc.nextInt();
+                        if(num==1){
+                            librarySystem.showBookInfo();
+                        }else{
+                            memuPrint();
+                        }
                     } else if (s == 3) {
-                        librarySystem.showBookInfo();
+                        System.out.println("\n-------------------------- 도서 반납하기 ---------------------------\n");
+                        librarySystem.returnBook();
                     } else if (s == 4) {
-                        System.out.println("잠시 대기");
+                        System.out.println("\n-------------------------- 도서 요청하기 ---------------------------\n");
                     }
                     break;
                 case 2:
