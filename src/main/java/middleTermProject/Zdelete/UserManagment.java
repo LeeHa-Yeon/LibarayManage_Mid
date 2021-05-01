@@ -1,4 +1,4 @@
-package middleTermProject;
+package middleTermProject.Zdelete;
 
 
 import middleTermProject.DTO.UserDto;

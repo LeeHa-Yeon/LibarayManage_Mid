@@ -1,4 +1,4 @@
 package middleTermProject.System;
 
-public class LibraryManagerScreen {
+public class LibraryManagerSystem {
 }

@@ -1,4 +1,4 @@
-package middleTermProject.System;
+package middleTermProject.Screen;
 
 import middleTermProject.DAO.SystemDao;
 
