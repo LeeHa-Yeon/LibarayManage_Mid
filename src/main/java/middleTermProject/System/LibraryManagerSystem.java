@@ -1,6 +1,8 @@
 package middleTermProject.System;
 
 import middleTermProject.DAO.BookDao;
+import middleTermProject.DTO.BookDto;
+import middleTermProject.DTO.UserDto;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LibraryManagerSystem implements BookDao {
+
+    public static BookDto accessedBookDto = null;
     @Override
     public void addBook() {
         System.out.println("----------------------------------------------");

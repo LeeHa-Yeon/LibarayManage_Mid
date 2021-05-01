@@ -54,7 +54,7 @@ public class LoginSystem implements LoginDao {
                     UserSystem.accessedUserDto.setName(profileSplit[2]);
                     UserSystem.accessedUserDto.setPhone(profileSplit[3]);
                     UserSystem.accessedUserDto.setAddress(profileSplit[4]);
-                    UserSystem.accessedUserDto.setBorrowed_book(Integer.parseInt(profileSplit[5]));
+                    UserSystem.accessedUserDto.setBorrowedLimit(Integer.parseInt(profileSplit[5]));
                     profile_br.close();
                     br.close();
                     return true;
@@ -107,8 +107,8 @@ public class LoginSystem implements LoginDao {
                 if(!idList.contains(newUser[0])) {
                     BufferedWriter all_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", true));
                     BufferedWriter profile_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + newUser[0] + "'s Info.txt", true));
-                    all_bw.write(String.format("%s/%s/%s/%s/%s%d", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],0));
-                    profile_bw.write(String.format("%s/%s/%s/%s/%s%d", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],0));
+                    all_bw.write(String.format("%s/%s/%s/%s/%s%d", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],3));
+                    profile_bw.write(String.format("%s/%s/%s/%s/%s%d", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],3));
                     all_bw.newLine();
                     profile_bw.newLine();
                     all_bw.flush();
@@ -204,11 +204,11 @@ public class LoginSystem implements LoginDao {
     public void logout() {
         UserSystem.accessedUserDto = new UserDto();
         UserSystem.accessedUserDto.setId("로그인을 해주세요");
-        UserSystem.accessedUserDto.setPwd("");
-        UserSystem.accessedUserDto.setName("");
-        UserSystem.accessedUserDto.setPhone("");
-        UserSystem.accessedUserDto.setAddress("");
-        UserSystem.accessedUserDto.setBorrowed_book(0);
+        UserSystem.accessedUserDto.setPwd("로그인을 해주세요");
+        UserSystem.accessedUserDto.setName("로그인을 해주세요");
+        UserSystem.accessedUserDto.setPhone("로그인을 해주세요");
+        UserSystem.accessedUserDto.setAddress("로그인을 해주세요");
+        UserSystem.accessedUserDto.setBorrowedLimit(0);
         try {
             System.out.println("3초 뒤에 로그인 화면으로 이동합니다..\n");
             Thread.sleep(3000);

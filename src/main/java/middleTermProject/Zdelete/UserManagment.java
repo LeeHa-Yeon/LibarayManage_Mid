@@ -12,7 +12,7 @@
 //@Component
 //public class UserManagment {
 //
-//
+//    public static UserDto accessedUserDto = null;
 //
 //    // 해야할 것 : 회원 정보 읽기 , 회원 정보 수정
 //

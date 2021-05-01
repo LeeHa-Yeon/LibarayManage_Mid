@@ -2,6 +2,9 @@ package middleTermProject.System;
 
 import middleTermProject.DAO.LibraryDao;
 import middleTermProject.DTO.BookDto;
+import middleTermProject.DTO.UserDto;
+import middleTermProject.Screen.LibraryUserScreen;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
@@ -10,6 +13,10 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class LibrarySystem implements LibraryDao {
+
+    @Autowired
+    LibraryUserScreen libraryUserScreen;
+    public static BookDto accessedUserDto = null;
 
     @Override
     public void showBookList() {
@@ -71,7 +78,7 @@ public class LibrarySystem implements LibraryDao {
         String[] bookSchema = {"isbn","도서번호","책 제목","지은이","출판사","카테고리","재고","대여가능여부","예약상태"};
         System.out.print("해당 책의 자세한 정보를 원하시면 도서번호를 입력해주세요 : ");
         String input_bookId = sc.nextLine();
-
+        System.out.println("\n------------------------------------");
         try {
             BufferedReader br_books = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt"));
             String bookLine = br_books.readLine();
@@ -86,20 +93,89 @@ public class LibrarySystem implements LibraryDao {
                 }
             }
         }catch(IOException e) {  System.out.println("-----> 실패 "); e.printStackTrace(); }
+        System.out.println("------------------------------------");
+        saveInfo(input_bookId);
+        System.out.println("-----> 1. 대여 요청하기 \t\t 2. 예약 요청하기 \t\t 3. 뒤로가기 \n");
+        System.out.print("-----> 선택해주세요 :");
+        int num = sc.nextInt();
+        if(num==1){
+            lendBook();
+        }else if(num==2){
+            bookBook();
+        }
+        else{
+            libraryUserScreen.memuPrint();
+        }
     }
 
     @Override
     public void lendBook() {
+        System.out.println("---------- 대여 진행 중 -------------");
+        int cnt = UserSystem.accessedUserDto.getBorrowedLimit();
+        Scanner sc = new Scanner(System.in);
 
+        if(LibraryManagerSystem.accessedBookDto.getIs_book_borrowed()){
+            // 대여 가능
+            System.out.println("이 책을 대여하시겠습니까 (yes/no) ? ");
+            String answer = sc.next();
+            if(answer.equals("yes")) {
+                if(cnt <= 0){
+                    System.out.println("대여 가능한 최대 개수(3개)를 초과하였습니다. 반납 후 이용해주세요");
+                    libraryUserScreen.memuPrint();
+                }else{
+                    LibraryManagerSystem.accessedBookDto.setIs_book_borrowed(false);
+                    UserSystem.accessedUserDto.setBorrowedLimit(cnt-1);
+                    System.out.println("대여 완료");
+                    System.out.println("앞으로 대여할 수 있는 남은 횟수 : "+UserSystem.accessedUserDto.getBorrowedLimit());
+                }
+            }
+            else{
+                System.out.println("대여를 취소하였습니다.");
+                libraryUserScreen.memuPrint();
+            }
+        }else{
+            // 대여 불가능
+            System.out.println("이미 대여중인 도서입니다.");
+            libraryUserScreen.memuPrint();
+        }
     }
 
     @Override
     public void returnBook() {
+        System.out.println("반납 함수");
 
     }
 
     @Override
     public void bookBook() {
+        System.out.println("예약 함수");
+    }
+
+    @Override
+    public void saveInfo(String id){
+        try {
+            BufferedReader br_books = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt"));
+            String bookLine = br_books.readLine();
+
+            while ((bookLine = br_books.readLine()) != null) {
+                String[] bookSplit = bookLine.split("/");
+                if(id.equals(bookSplit[1])){
+                    // 3/3/이것은 취업을 위한 코딩테스트이다/동빈나/드림/컴퓨터/1/false/false
+                    LibraryManagerSystem.accessedBookDto = new BookDto();
+                    LibraryManagerSystem.accessedBookDto.setBook_ISBN(Integer.parseInt(bookSplit[0]));
+                    LibraryManagerSystem.accessedBookDto.setBook_id(Integer.parseInt(bookSplit[1]));
+                    LibraryManagerSystem.accessedBookDto.setBook_title(bookSplit[2]);
+                    LibraryManagerSystem.accessedBookDto.setBook_author(bookSplit[3]);
+                    LibraryManagerSystem.accessedBookDto.setBook_publisher(bookSplit[4]);
+                    LibraryManagerSystem.accessedBookDto.setBook_category(bookSplit[5]);
+                    LibraryManagerSystem.accessedBookDto.setBook_stock(Integer.parseInt(bookSplit[6]));
+                    LibraryManagerSystem.accessedBookDto.setIs_book_borrowed(Boolean.parseBoolean(bookSplit[7]));
+                    LibraryManagerSystem.accessedBookDto.setIs_book_reservation(Boolean.parseBoolean(bookSplit[8]));
+                }
+            }
+        }catch(IOException e) { e.printStackTrace(); }
 
     }
+
 }
+

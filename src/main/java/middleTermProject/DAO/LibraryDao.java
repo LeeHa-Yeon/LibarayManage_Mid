@@ -21,4 +21,6 @@ public interface LibraryDao {
     public void bookBook();
 
     // 기타 추가
+    // 도서 정보 저장
+    public void saveInfo(String id);
 }
