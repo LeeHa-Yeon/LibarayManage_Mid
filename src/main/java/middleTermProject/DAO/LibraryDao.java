@@ -15,7 +15,7 @@ public interface LibraryDao {
     public void lendBook();
 
     // 도서 반납
-    public void returnBook();
+    public void returnBook() throws InterruptedException;
 
     // 도서 예약
     public void bookBook();

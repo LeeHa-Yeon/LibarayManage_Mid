@@ -70,10 +70,10 @@ public class LibraryUserScreen implements SystemDao {
                             memuPrint();
                         }
                     } else if (s == 3) {
-                        System.out.println("\n-------------------------- 도서 반납하기 ---------------------------\n");
+                        System.out.println("\n-------------------- 도서 반납하기 ---------------------\n");
                         librarySystem.returnBook();
                     } else if (s == 4) {
-                        System.out.println("\n-------------------------- 도서 요청하기 ---------------------------\n");
+                        System.out.println("\n-------------------- 도서 요청하기 ---------------------\n");
                     }
                     break;
                 case 2:

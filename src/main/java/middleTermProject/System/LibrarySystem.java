@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
 
 public class LibrarySystem implements LibraryDao {
@@ -159,8 +164,75 @@ public class LibrarySystem implements LibraryDao {
     }
 
     @Override
-    public void returnBook() {
-        System.out.println("\n------------- 반납 진행 중 ---------------");
+    public void returnBook(){
+        Scanner sc = new Scanner(System.in);
+
+        String lendString = UserSystem.accessedUserDto.getLendBookList().get(0);
+        String[] lendList = lendString.split(",|\\[|\\]");
+        ArrayList<String> bookList = new ArrayList<>();
+        for(String a1 : lendList ){
+            if(a1.length()>1) {
+                bookList.add(a1);
+            }
+        }
+
+        SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd");
+        Date time = new Date();
+        String currentDate = format1.format(time);
+
+
+
+        System.out.println("------------- 반납 진행 중 ---------------");
+
+        if(bookList.size()==0){
+            System.out.println("----> 반납할 책이 없습니다. \n----> 3초 뒤 메인으로 돌아갑니다. ");
+            System.out.println("---------------------------------------\n");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            libraryUserScreen.memuPrint();
+        }else{
+            System.out.print("반납하실 도서 제목을 입력해주세요 : ");
+            String titleInput = sc.nextLine();
+            if(bookList.contains(titleInput)){
+                int index = bookList.indexOf(titleInput);
+                int deadlineDate = dateCompareTo(currentDate,bookList.get(index+2));
+
+                System.out.print("책을 반납하시겠습니까(y/n)? ");
+                String answer = sc.nextLine();
+                if(answer.equals("y")){
+                    if(deadlineDate==1){
+                        //-> 시간안에 반납 못했을 경우 -> 연체-> 일주일간 책을 못빌립니다.
+                        System.out.println("이 책의 반납기간은"+bookList.get(index+1)+" ~"+bookList.get(index+2)+"이였습니다.");
+                        System.out.println("-----> 연체되었습니다.");
+                        System.out.println("-----> 일주일간 대여 불가능합니다.\n");
+                        System.out.println("-----> 반납이 완료되었습니다.");
+                    }else{
+                        //-> 시간 안에 반납했을 경우 -> 정상
+                        System.out.println("-----> 감사합니다. 정상적으로 반납이 완료되었습니다.");
+                    }
+                    System.out.println("---------------------------------------\n");
+                    libraryUserScreen.memuPrint();
+                }else{
+                    System.out.println("----> 메인 화면으로 돌아갑니다.\n");
+                    System.out.println("---------------------------------------\n");
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    libraryUserScreen.memuPrint();
+
+                }
+            }else{
+                System.out.println("----> 반납하실 책 중 \""+titleInput+"\"이 존재하지 않습니다.\n----> 다시 확인해주세요.\n");
+                returnBook();
+            }
+        }
+
+
 
     }
 
@@ -193,6 +265,21 @@ public class LibrarySystem implements LibraryDao {
             }
         }catch(IOException e) { e.printStackTrace(); }
 
+    }
+    public int dateCompareTo(String currentDate, String returnDate) {
+        SimpleDateFormat format = new SimpleDateFormat ("yyyy-MM-dd");
+        Date today = null;
+        try {
+            today = format.parse(currentDate);
+        } catch (ParseException e) { e.printStackTrace(); }
+        Date end = null;
+        try {
+            end = format.parse(returnDate);
+        } catch (ParseException e) { e.printStackTrace(); }
+
+        int result = today.compareTo(end);
+
+        return result;
     }
 
 }
