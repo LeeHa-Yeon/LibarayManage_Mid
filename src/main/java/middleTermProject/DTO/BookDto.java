@@ -16,6 +16,7 @@ public class BookDto {
     private String is_book_borrowed;  // 대여가능여부
     private Boolean is_book_reservation;  // 예약중인지 아닌지
 
+
     public int getBook_id() {
         return book_id;
     }

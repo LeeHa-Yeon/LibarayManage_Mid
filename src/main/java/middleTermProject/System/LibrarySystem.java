@@ -22,8 +22,6 @@ public class LibrarySystem implements LibraryDao {
     @Autowired
     UserSystem userSystem;
 
-
-
     @Override
     public void showBookList() {
         try {
@@ -148,13 +146,13 @@ public class LibrarySystem implements LibraryDao {
                 libraryUserScreen.memuPrint();
             }
             else{
-                System.out.println("대여를 취소하였습니다.");
+                System.out.println("\t\t대여를 취소하였습니다.");
                 System.out.println("---------------------------------------\n");
                 libraryUserScreen.memuPrint();
             }
         }else{
             // 대여 불가능
-            System.out.println("이미 대여중인 도서입니다.");
+            System.out.println("\t\t이미 대여중인 도서입니다.");
             System.out.println("---------------------------------------\n");
             libraryUserScreen.memuPrint();
         }

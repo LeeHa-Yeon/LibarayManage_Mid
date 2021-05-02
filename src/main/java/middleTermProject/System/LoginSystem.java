@@ -1,12 +1,15 @@
 package middleTermProject.System;
 
 import middleTermProject.DAO.LoginDao;
+import middleTermProject.DTO.BookDto;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LoginScreen;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -42,19 +45,28 @@ public class LoginSystem implements LoginDao {
             if (idList.contains(userInput[0])) {
                 BufferedReader profile_br = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + userInput[0] + "'s Info.txt"));
                 String profileLine = profile_br.readLine();
-                String[] profileSplit = profileLine.split("/");
+                String[] profileSplit = profileLine.split("/"); //"[]"
 
                 // 비밀번호가 맞았을 경우
                 if (profileSplit[1].equals(userInput[1])) {
                     System.out.println("——> 로그인이 성공적으로 이루어졌습니다.\n");
                     // 회원 정보 불러오기
+                    ArrayList<String> profile5 = new ArrayList<String>();
+                    if(profileSplit[5].length() > 1) {
+                        profile5.add(profileSplit[5].substring(1, profileSplit[5].length() - 1));
+                    }else{
+                        profile5.add(profileSplit[5].substring(0, profileSplit[5].length() - 1));
+                    }
+
                     UserSystem.accessedUserDto = new UserDto();
                     UserSystem.accessedUserDto.setId(profileSplit[0]);
                     UserSystem.accessedUserDto.setPwd(profileSplit[1]);
                     UserSystem.accessedUserDto.setName(profileSplit[2]);
                     UserSystem.accessedUserDto.setPhone(profileSplit[3]);
                     UserSystem.accessedUserDto.setAddress(profileSplit[4]);
-                    UserSystem.accessedUserDto.setBorrowedLimit(profileSplit[5]);
+                    UserSystem.accessedUserDto.setLendBookList(profile5);
+                    UserSystem.accessedUserDto.setBorrowedLimit(profileSplit[6]);
+                   System.out.println("---->나중에 지워"+profileSplit[6]+"dd"+UserSystem.accessedUserDto.getBorrowedLimit());
                     profile_br.close();
                     br.close();
                     return true;
@@ -99,6 +111,8 @@ public class LoginSystem implements LoginDao {
                 BufferedReader br = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt"));
                 String userLine = br.readLine();
                 List<String> idList = new ArrayList<String>();
+                ArrayList<String> lendList = new ArrayList<>();
+
 
                 while ((userLine = br.readLine()) != null) {
                     String[] userSplit = userLine.split("/");
@@ -107,8 +121,8 @@ public class LoginSystem implements LoginDao {
                 if(!idList.contains(newUser[0])) {
                     BufferedWriter all_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", true));
                     BufferedWriter profile_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + newUser[0] + "'s Info.txt", true));
-                    all_bw.write(String.format("%s/%s/%s/%s/%s%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],"3"));
-                    profile_bw.write(String.format("%s/%s/%s/%s/%s%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],"3"));
+                    all_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"3"));
+                    profile_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"3"));
                     all_bw.newLine();
                     profile_bw.newLine();
                     all_bw.flush();

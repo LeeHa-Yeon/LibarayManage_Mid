@@ -2,6 +2,7 @@ package middleTermProject;
 
 import middleTermProject.Screen.LoginScreen;
 import middleTermProject.System.FileSystem;
+import middleTermProject.System.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -16,6 +17,9 @@ public class LibraryApplication {
 
         LoginScreen loginScreen = (LoginScreen) ctx.getBean("loginScreen");
         loginScreen.memuPrint();
+
+//        Test test = (Test) ctx.getBean("test");
+//        test.testPrint();
 
 
         ctx.close();

@@ -32,6 +32,8 @@ public class JavaConfig {
     public FileSystem fileSystem(){ return new FileSystem(); }
     @Bean
     public BookSystem bookSystem(){ return new BookSystem();}
+    @Bean
+    public Test test(){ return new Test(); }
 
 
 

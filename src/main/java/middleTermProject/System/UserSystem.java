@@ -8,8 +8,8 @@ import middleTermProject.Screen.LibraryUserScreen;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class UserSystem implements UserDao, FileDao {
 
@@ -172,12 +172,32 @@ public class UserSystem implements UserDao, FileDao {
 
         String line;
         String repLine;
+        String repLine2;
+        ArrayList<String> newLendBook = new ArrayList<>();
 
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat todayformat = new SimpleDateFormat ( "yyyy-MM-dd");
+        Date time = new Date();
+        String lend_date = todayformat.format(time);
+        cal.add(cal.DATE,+7);
+        String return_date = todayformat.format(cal.getTime());
+
+        newLendBook.add(LibraryManagerSystem.accessedBookDto.getBook_title());
+        newLendBook.add(lend_date);
+        newLendBook.add(return_date);
+
+        if (!UserSystem.accessedUserDto.getLendBookList().contains(newLendBook.toString())) {
+            UserSystem.accessedUserDto.getLendBookList().add(newLendBook.toString());
+        }
         while ((line = br.readLine()) != null) {
             String[] userSplit = line.split("/");
             if(userSplit[0].equals(id)) {
+                ArrayList<String> profile5 = new ArrayList<String>();
+                profile5.add(userSplit[5].substring(1,userSplit[5].length()-1));
+
                 String subStr = line.substring(line.length()-1,line.length());
-                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[5],UserSystem.accessedUserDto.getBorrowedLimit());
+                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[6],UserSystem.accessedUserDto.getBorrowedLimit()) ;
+                repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
             }else {
