@@ -13,7 +13,7 @@ public class BookDto {
     private int book_stock;   // 책 재고
     private Date lend_date;   // 빌린날짜
     private Date return_date;  // 반납일자
-    private Boolean is_book_borrowed;  // 대여가능여부
+    private String is_book_borrowed;  // 대여가능여부
     private Boolean is_book_reservation;  // 예약중인지 아닌지
 
     public int getBook_id() {
@@ -72,11 +72,11 @@ public class BookDto {
         this.book_stock = book_stock;
     }
 
-    public Boolean getIs_book_borrowed() {
+    public String getIs_book_borrowed() {
         return is_book_borrowed;
     }
 
-    public void setIs_book_borrowed(Boolean is_book_borrowed) {
+    public void setIs_book_borrowed(String is_book_borrowed) {
         this.is_book_borrowed = is_book_borrowed;
     }
 

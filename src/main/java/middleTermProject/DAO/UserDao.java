@@ -9,6 +9,9 @@ public interface UserDao {
     // 회원 정보 읽기
     public void showProfile();
 
+    // 수정된 회원 정보 업데이트
+    public void updateInfo(String id);
+
     // 내가 대여한 목록 보기  -> 구현 예정
 
 

@@ -1,17 +1,21 @@
 package middleTermProject.System;
 
+import middleTermProject.DAO.FileDao;
 import middleTermProject.DAO.UserDao;
+import middleTermProject.DTO.BookDto;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LibraryUserScreen;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
-public class UserSystem implements UserDao {
+public class UserSystem implements UserDao, FileDao {
 
     @Autowired
     LibraryUserScreen libraryUserScreen;
+
 
     public static UserDto accessedUserDto = null;
 
@@ -112,20 +116,83 @@ public class UserSystem implements UserDao {
     @Override
     public void showProfile() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("\n---> "+UserSystem.accessedUserDto.getName()+"의 회원 정보");
+        System.out.println("\n---> " + UserSystem.accessedUserDto.getName() + "의 회원 정보");
         System.out.println("  \n  아이디\t ㅣ  이름   ㅣ 핸드폰 번호\t ㅣ 주소 ㅣ 대여 가능한 책수 ");
         System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
-        System.out.println(" "+UserSystem.accessedUserDto.getId()+"\t   "+UserSystem.accessedUserDto.getName()+"\t\t"+UserSystem.accessedUserDto.getPhone()+"\t\t"+UserSystem.accessedUserDto.getAddress()+"\t\t"+UserSystem.accessedUserDto.getBorrowedLimit());
+        System.out.println(" " + UserSystem.accessedUserDto.getId() + "\t   " + UserSystem.accessedUserDto.getName() + "\t\t" + UserSystem.accessedUserDto.getPhone() + "\t\t" + UserSystem.accessedUserDto.getAddress() + "\t\t" + UserSystem.accessedUserDto.getBorrowedLimit());
         System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
 
         System.out.println("-----> 1. 회원 정보를 수정\t\t 2. 뒤로가기 \n");
         System.out.print("-----> 선택해주세요 :");
         int num = sc.nextInt();
-        if(num==1){
+        if (num == 1) {
             System.out.println("회원 정보 수정창으로 이동");
-        }else{
+        } else {
             libraryUserScreen.memuPrint();
         }
 
+    }
+
+    @Override
+    public void updateInfo(String id) {
+        try {
+            BufferedReader br_books = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt"));
+            String bookLine = br_books.readLine();
+
+            while ((bookLine = br_books.readLine()) != null) {
+                String[] bookSplit = bookLine.split("/");
+                if(id.equals(bookSplit[1])){
+                    LibraryManagerSystem.accessedBookDto = new BookDto();
+                    LibraryManagerSystem.accessedBookDto.setBook_ISBN(Integer.parseInt(bookSplit[0]));
+                    LibraryManagerSystem.accessedBookDto.setBook_id(Integer.parseInt(bookSplit[1]));
+                    LibraryManagerSystem.accessedBookDto.setBook_title(bookSplit[2]);
+                    LibraryManagerSystem.accessedBookDto.setBook_author(bookSplit[3]);
+                    LibraryManagerSystem.accessedBookDto.setBook_publisher(bookSplit[4]);
+                    LibraryManagerSystem.accessedBookDto.setBook_category(bookSplit[5]);
+                    LibraryManagerSystem.accessedBookDto.setBook_stock(Integer.parseInt(bookSplit[6]));
+                    LibraryManagerSystem.accessedBookDto.setIs_book_borrowed(bookSplit[7]);
+                    LibraryManagerSystem.accessedBookDto.setIs_book_reservation(Boolean.parseBoolean(bookSplit[8]));
+                }
+            }
+        }catch(IOException e) { e.printStackTrace(); }
+
+    }
+
+    @Override
+    public boolean updateLendFile(String FilePath, String id) throws IOException
+    {
+        boolean result = false;
+        File originFile = new File(FilePath);
+        File tempFile = new File(FilePath + ".temp");
+
+        FileInputStream fileOriginStream = new FileInputStream(originFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileOriginStream));
+        FileOutputStream fileTempStream = new FileOutputStream(tempFile);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+
+        String line;
+        String repLine;
+
+        while ((line = br.readLine()) != null) {
+            String[] userSplit = line.split("/");
+            if(userSplit[0].equals(id)) {
+                String subStr = line.substring(line.length()-1,line.length());
+                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[5],UserSystem.accessedUserDto.getBorrowedLimit());
+                bw.write(repLine, 0, repLine.length());
+                bw.newLine();
+            }else {
+                bw.write(line + "\n");
+            }
+            bw.flush();
+
+            result = true;
+        }
+        if (result) {
+            br.close();
+            bw.close();
+            originFile.delete();
+            tempFile.renameTo(originFile);
+        }
+        return result;
     }
 }

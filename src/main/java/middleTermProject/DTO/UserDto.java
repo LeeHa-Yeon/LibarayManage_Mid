@@ -17,7 +17,7 @@ public class UserDto {
     private String phone;
     private String address;
     // 처음엔 이거 0 으로 초기화
-    private int borrowedLimit;
+    private String borrowedLimit;
     // 빌린 책 -> 책이름, 빌린날짜 ,반납날짜
     private List<BookDto> lendBookList = new ArrayList<BookDto>();
 
@@ -62,11 +62,11 @@ public class UserDto {
         this.address = address;
     }
 
-    public int getBorrowedLimit(){
+    public String getBorrowedLimit(){
         return borrowedLimit;
     }
 
-    public void setBorrowedLimit(int borrowedLimit){
+    public void setBorrowedLimit(String borrowedLimit){
         this.borrowedLimit = borrowedLimit;
     }
 

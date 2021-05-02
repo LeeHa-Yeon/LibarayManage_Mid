@@ -8,6 +8,8 @@ import middleTermProject.System.*;
 import org.springframework.context.annotation.*;
 import org.springframework.context.annotation.Configuration;
 
+import java.awt.print.Book;
+
 @Configuration
 public class JavaConfig {
     @Bean
@@ -26,6 +28,10 @@ public class JavaConfig {
     public UserSystem userSystem(){ return new UserSystem(); }
     @Bean
     public LibrarySystem librarySystem(){ return new LibrarySystem(); }
+    @Bean
+    public FileSystem fileSystem(){ return new FileSystem(); }
+    @Bean
+    public BookSystem bookSystem(){ return new BookSystem();}
 
 
 
