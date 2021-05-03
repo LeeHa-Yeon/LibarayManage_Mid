@@ -42,7 +42,7 @@ public class LibraryUserScreen implements SystemDao {
             switch (select) {
                 case 1:
                     System.out.println("\n-------------- 도서 이용 시스템 ----------------");
-                    System.out.println("\t\t\t1. 전체 도서 목록보기\n  \t\t\t2. 도서 검색하기(찾기)\n  \t\t\t3. 도서 반납하기\n  \t\t\t4. 도서 요청하기 ");
+                    System.out.println("\t\t\t1. 전체 도서 목록보기\n  \t\t\t2. 도서 검색하기(찾기)\n  \t\t\t3. 도서 반납하기\n  \t\t\t4. 도서 요청하기\n  \t\t\t5. 홈으로 돌아가기  ");
                     System.out.println("----------------------------------------------");
                     System.out.print("\n 번호를 선택해주세요 : ");
                     s = sc.nextInt();
@@ -75,6 +75,8 @@ public class LibraryUserScreen implements SystemDao {
                     } else if (s == 4) {
                         System.out.println("\n-------------------- 도서 요청하기 ---------------------\n");
                         userSystem.proposeBook();
+                    } else{
+                        memuPrint();
                     }
                     break;
                 case 2:

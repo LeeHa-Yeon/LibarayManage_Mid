@@ -55,8 +55,8 @@ public class LibraryManagerSystem implements BookDao {
                 BufferedWriter bw_books = new BufferedWriter(new FileWriter(booksPwd, true));
                 BufferedWriter bw_book = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/" + newBook[2] + "'s Info.txt", true));
 
-                bw_books.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b", Integer.parseInt(newBook[0]), Integer.parseInt(newBook[1]), newBook[2], newBook[3], newBook[4], newBook[5], 1,false, false));
-                bw_book.write(String.format("%d/%d/%s/%s/%s/%s/%d/%b/%b", Integer.parseInt(newBook[0]), Integer.parseInt(newBook[1]), newBook[2], newBook[3], newBook[4], newBook[5], 1, false, false));
+                bw_books.write(String.format("%d/%d/%s/%s/%s/%s/%d/%s/%b", Integer.parseInt(newBook[0]), Integer.parseInt(newBook[1]), newBook[2], newBook[3], newBook[4], newBook[5], 1,"대여가능", false));
+                bw_book.write(String.format("%d/%d/%s/%s/%s/%s/%d/%s/%b", Integer.parseInt(newBook[0]), Integer.parseInt(newBook[1]), newBook[2], newBook[3], newBook[4], newBook[5], 1, "대여가능", false));
 
                 bw_books.newLine();
                 bw_book.newLine();
