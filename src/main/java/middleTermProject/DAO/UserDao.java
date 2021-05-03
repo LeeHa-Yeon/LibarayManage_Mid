@@ -14,5 +14,8 @@ public interface UserDao {
 
     // 내가 대여한 목록 보기  -> 구현 예정
 
+    // 회원 탈퇴
+    public void signout();
+
 
 }

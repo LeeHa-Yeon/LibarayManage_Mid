@@ -5,10 +5,9 @@ import middleTermProject.Screen.LibraryManagerScreen;
 import middleTermProject.Screen.LibraryUserScreen;
 import middleTermProject.Screen.LoginScreen;
 import middleTermProject.System.*;
+import middleTermProject.Zdelete.Test;
 import org.springframework.context.annotation.*;
 import org.springframework.context.annotation.Configuration;
-
-import java.awt.print.Book;
 
 @Configuration
 public class JavaConfig {
@@ -20,8 +19,6 @@ public class JavaConfig {
     public LibraryUserScreen libraryUserScreen(){ return new LibraryUserScreen(); }
     @Bean
     public LibraryManagerScreen libraryManagerScreen(){ return new LibraryManagerScreen();}
-    @Bean
-    public LibraryUserSystem libraryUserSystem(){ return new LibraryUserSystem();}
     @Bean
     public LibraryManagerSystem libraryManagerSystem(){ return new LibraryManagerSystem(); }
     @Bean

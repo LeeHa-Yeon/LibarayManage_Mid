@@ -1,15 +1,12 @@
 package middleTermProject.System;
 
 import middleTermProject.DAO.LoginDao;
-import middleTermProject.DTO.BookDto;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LoginScreen;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 

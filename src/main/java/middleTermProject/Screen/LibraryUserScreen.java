@@ -90,7 +90,8 @@ public class LibraryUserScreen implements SystemDao {
                     memuPrint();
                     break;
                 case 4:
-                    System.out.println("회원 탈퇴 구현하기");
+                    System.out.println("\n-------------- 회원 탈퇴 창 ----------------\n");
+                    userSystem.signout();
                     break;
                 default:
                     System.out.println("\n--------> 로그아웃되었습니다.\n");

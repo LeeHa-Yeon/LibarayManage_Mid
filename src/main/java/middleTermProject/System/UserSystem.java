@@ -5,6 +5,7 @@ import middleTermProject.DAO.UserDao;
 import middleTermProject.DTO.BookDto;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LibraryUserScreen;
+import middleTermProject.Screen.LoginScreen;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
@@ -15,6 +16,8 @@ public class UserSystem implements UserDao, FileDao {
 
     @Autowired
     LibraryUserScreen libraryUserScreen;
+    @Autowired
+    LoginScreen loginScreen;
 
 
     public static UserDto accessedUserDto = null;
@@ -156,6 +159,63 @@ public class UserSystem implements UserDao, FileDao {
             }
         }catch(IOException e) { e.printStackTrace(); }
 
+    }
+
+    @Override
+    public void signout() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("\n 비밀번호를 입력해주세요 : ");
+        String pwdInput = sc.nextLine();
+        if(!pwdInput.equals(UserSystem.accessedUserDto.getPwd())){
+            System.out.println(" ----> 비밀번호가 틀렸습니다. \n ----> 이전 화면으로 돌아갑니다.\n");
+            libraryUserScreen.memuPrint();
+        }else{
+            System.out.print(" 정말로 회원을 탈퇴하시겠습니까 (y/n)?  ");
+            String answer = sc.nextLine();
+            if(answer.equals("y")){
+                try {
+                    String allPath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt";
+                    String profilePath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt";
+                    String alltempPath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/temp.txt";
+
+                    File originfile = new File(allPath);
+                    File tempfile = new File(alltempPath);
+                    File deleteFile = new File(profilePath);
+                    BufferedReader br_users = new BufferedReader(new FileReader(allPath));
+                    BufferedWriter bw_users = new BufferedWriter(new FileWriter(tempfile));
+                    String alluserLine = br_users.readLine();
+
+                    bw_users.write("Id/비번/이름/번호/주소/[]/대여가능한날짜(연체)/제한수\n");
+                    while ((alluserLine = br_users.readLine()) != null) {
+                        String[] userSplit = alluserLine.split("/");
+                        if (!UserSystem.accessedUserDto.getId().equals(userSplit[0])) {
+                            bw_users.write(alluserLine+"\n");
+                        }
+                        bw_users.flush();
+                    }
+
+                    if(deleteFile.exists()) {
+                        deleteFile.delete();
+                    } else {
+                        System.out.println("파일이 존재하지 않습니다.");
+                    }
+
+                    bw_users.close();
+                    br_users.close();
+                    originfile.delete();
+                    tempfile.renameTo(originfile);
+
+                    System.out.println(" ------> 탈퇴되었습니다.");
+                    loginScreen.memuPrint();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }else{
+                System.out.println(" ------> 취소되었습니다.");
+                libraryUserScreen.memuPrint();
+            }
+
+        }
     }
 
     @Override

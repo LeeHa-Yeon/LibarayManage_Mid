@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 // 호출할때마다 새로운 녀석 만들어야 하므로

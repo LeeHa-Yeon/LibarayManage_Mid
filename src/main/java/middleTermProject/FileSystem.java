@@ -1,4 +1,4 @@
-package middleTermProject.System;
+package middleTermProject;
 
 import java.io.*;
 public class FileSystem {
