@@ -239,11 +239,50 @@ public class UserSystem implements UserDao, FileDao {
         while ((line = br.readLine()) != null) {
             String[] userSplit = line.split("/");
             if(userSplit[0].equals(id)) {
-                // 재고 1개 증가
+                // 재고 1개 증가 7
                 String subStr = line.substring(line.length()-1,line.length());
                 repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[7],UserSystem.accessedUserDto.getBorrowedLimit()) ;
-                // 연체 날짜 입력
+                // 연체 날짜 입력 6
+                if(overdue_date.equals(UserSystem.accessedUserDto.getOverdueDate())) {
+                    // 연체일때
+                    repLine = repLine.replace(userSplit[6], UserSystem.accessedUserDto.getOverdueDate());
+                }
+                //  id는 대여리스트에서 제거 5
                 repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
+                bw.write(repLine, 0, repLine.length());
+                bw.newLine();
+            }else {
+                bw.write(line + "\n");
+            }
+            bw.flush();
+
+            result = true;
+        }
+        if (result) {
+            br.close();
+            bw.close();
+            originFile.delete();
+            tempFile.renameTo(originFile);
+        }
+    }
+
+    public void OverdueEnd(String FilePath, String id)throws IOException {
+        boolean result = false;
+        File originFile = new File(FilePath);
+        File tempFile = new File(FilePath + ".temp");
+
+        FileInputStream fileOriginStream = new FileInputStream(originFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileOriginStream));
+        FileOutputStream fileTempStream = new FileOutputStream(tempFile);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+
+        String line;
+        String repLine;
+
+        while ((line = br.readLine()) != null) {
+            String[] userSplit = line.split("/");
+            if(userSplit[0].equals(id)) {
+                repLine = line.replace(userSplit[6], UserSystem.accessedUserDto.getOverdueDate());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
             }else {

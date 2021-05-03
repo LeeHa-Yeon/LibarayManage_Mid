@@ -126,42 +126,61 @@ public class LibrarySystem implements LibraryDao {
         String cnt = UserSystem.accessedUserDto.getBorrowedLimit();
         Scanner sc = new Scanner(System.in);
 
-        if (LibraryManagerSystem.accessedBookDto.getIs_book_borrowed().equals("대여가능")) {
-            // 대여 가능
-            System.out.print("이 책을 대여하시겠습니까 (yes/no) ? ");
-            String answer = sc.nextLine();
-            if (answer.equals("yes")) {
-                if (Integer.parseInt(cnt) <= 0) {
-                    System.out.println("대여 가능한 최대 개수(3개)를 초과하였습니다. 반납 후 이용해주세요");
-                    System.out.println("---------------------------------------\n");
-                } else {
-                    LibraryManagerSystem.accessedBookDto.setIs_book_borrowed("대여불가능");
-                    // 유저정보에 대여가능수를 1감소하여 업데이트
-                    UserSystem.accessedUserDto.setBorrowedLimit(Integer.toString(Integer.parseInt(cnt) - 1));
-                    System.out.println("-----> 대여 완료");
-                    System.out.println("-----> 앞으로 대여할 수 있는 남은 횟수 : " + UserSystem.accessedUserDto.getBorrowedLimit());
-                    System.out.println("---------------------------------------\n");
-                    try {
-                        bookSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt", Integer.toString(LibraryManagerSystem.accessedBookDto.getBook_id()));
-                        bookSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/" + LibraryManagerSystem.accessedBookDto.getBook_title() + "'s Info.txt", Integer.toString(LibraryManagerSystem.accessedBookDto.getBook_id()));
-                        userSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", UserSystem.accessedUserDto.getId());
-                        userSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", UserSystem.accessedUserDto.getId());
-                        Thread.sleep(3000);
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat format1 = new SimpleDateFormat("yyy-MM-dd");
+        Date time = new Date();
+        String currentDate = format1.format(time);
+        int Overdueing = dateCompareTo(currentDate, UserSystem.accessedUserDto.getOverdueDate());
+
+        if(Overdueing<1){
+            System.out.println("연체된 기록이 있어 책을 "+UserSystem.accessedUserDto.getOverdueDate()+" 까지 대출할 수 없습니다.");
+            System.out.println("---------------------------------------\n");
+            libraryUserScreen.memuPrint();
+        }else{
+            UserSystem.accessedUserDto.setOverdueDate("\"정상\"");
+            try {
+                userSystem.OverdueEnd("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", UserSystem.accessedUserDto.getId());
+                userSystem.OverdueEnd("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", UserSystem.accessedUserDto.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (LibraryManagerSystem.accessedBookDto.getIs_book_borrowed().equals("대여가능")) {
+                // 대여 가능
+                System.out.print("이 책을 대여하시겠습니까 (yes/no) ? ");
+                String answer = sc.nextLine();
+                if (answer.equals("yes")) {
+                    if (Integer.parseInt(cnt) <= 0) {
+                        System.out.println("대여 가능한 최대 개수(3개)를 초과하였습니다. 반납 후 이용해주세요");
+                        System.out.println("---------------------------------------\n");
+                    } else {
+                        LibraryManagerSystem.accessedBookDto.setIs_book_borrowed("대여불가능");
+                        // 유저정보에 대여가능수를 1감소하여 업데이트
+                        UserSystem.accessedUserDto.setBorrowedLimit(Integer.toString(Integer.parseInt(cnt) - 1));
+                        System.out.println("-----> 대여 완료");
+                        System.out.println("-----> 앞으로 대여할 수 있는 남은 횟수 : " + UserSystem.accessedUserDto.getBorrowedLimit());
+                        System.out.println("---------------------------------------\n");
+                        try {
+                            bookSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt", Integer.toString(LibraryManagerSystem.accessedBookDto.getBook_id()));
+                            bookSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/Book_detail/" + LibraryManagerSystem.accessedBookDto.getBook_title() + "'s Info.txt", Integer.toString(LibraryManagerSystem.accessedBookDto.getBook_id()));
+                            userSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", UserSystem.accessedUserDto.getId());
+                            userSystem.updateLendFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", UserSystem.accessedUserDto.getId());
+                            Thread.sleep(3000);
+                        } catch (IOException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    libraryUserScreen.memuPrint();
+                } else {
+                    System.out.println("\t\t대여를 취소하였습니다.");
+                    System.out.println("---------------------------------------\n");
+                    libraryUserScreen.memuPrint();
                 }
-                libraryUserScreen.memuPrint();
             } else {
-                System.out.println("\t\t대여를 취소하였습니다.");
+                // 대여 불가능
+                System.out.println("\t\t이미 대여중인 도서입니다.");
                 System.out.println("---------------------------------------\n");
                 libraryUserScreen.memuPrint();
             }
-        } else {
-            // 대여 불가능
-            System.out.println("\t\t이미 대여중인 도서입니다.");
-            System.out.println("---------------------------------------\n");
-            libraryUserScreen.memuPrint();
         }
     }
 
@@ -219,10 +238,10 @@ public class LibrarySystem implements LibraryDao {
                     }else {
                         if(cnt%4==0) {
                             removeLendBook = new ArrayList<>();
-                            removeLendBook.add(String.join("",bookList.get(i).split(" ")));
+                            removeLendBook.add(bookList.get(i));
                             returnRemoveList.add(removeLendBook);
                         }else{
-                            removeLendBook.add(String.join("",bookList.get(i).split(" ")));
+                            removeLendBook.add(bookList.get(i));
                         }
                         cnt+=1;
                     }
@@ -261,6 +280,9 @@ public class LibrarySystem implements LibraryDao {
                             //-> 시간 안에 반납했을 경우 -> 정상
                             System.out.println("-----> 감사합니다. 정상적으로 반납이 완료되었습니다.");
                         }
+                        userSystem.updateReturnFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", UserSystem.accessedUserDto.getId());
+                        userSystem.updateReturnFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", UserSystem.accessedUserDto.getId());
+
                         System.out.println("---------------------------------------\n");
                         libraryUserScreen.memuPrint();
                     } catch (IOException e) {
