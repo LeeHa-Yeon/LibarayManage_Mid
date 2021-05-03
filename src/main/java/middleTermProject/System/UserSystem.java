@@ -18,6 +18,8 @@ public class UserSystem implements UserDao, FileDao {
     LibraryUserScreen libraryUserScreen;
     @Autowired
     LoginScreen loginScreen;
+    @Autowired
+    FileSystem fileSystem;
 
 
     public static UserDto accessedUserDto = null;
@@ -70,12 +72,12 @@ public class UserSystem implements UserDao, FileDao {
 
                 while ((line = br_users.readLine()) != null) {
                     String[] userSplit = line.split("/");
-                    if(userSplit[0].equals(UserSystem.accessedUserDto.getId())) {
+                    if (userSplit[0].equals(UserSystem.accessedUserDto.getId())) {
                         repLine = line.replaceAll(presentPWD, replacePWD);
                         bw_users.write(repLine, 0, repLine.length());
                         bw_users.newLine();
-                    }else{
-                        bw_users.write(line+"\n");
+                    } else {
+                        bw_users.write(line + "\n");
                     }
                 }
                 String line2;
@@ -127,9 +129,9 @@ public class UserSystem implements UserDao, FileDao {
 
         System.out.println("-----> 1. 회원 정보를 수정\t\t 2. 뒤로가기 \n");
         System.out.print("-----> 선택해주세요 :");
-        int num = sc.nextInt();
-        if (num == 1) {
-            System.out.println("회원 정보 수정창으로 이동");
+        String num = sc.nextLine();
+        if (num.equals("1")) {
+            updateInfo(UserSystem.accessedUserDto.getId());
         } else {
             libraryUserScreen.memuPrint();
         }
@@ -138,27 +140,52 @@ public class UserSystem implements UserDao, FileDao {
 
     @Override
     public void updateInfo(String id) {
-        try {
-            BufferedReader br_books = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt"));
-            String bookLine = br_books.readLine();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("---------------------------------------------\n");
+        System.out.println(" ----------   수정할 정보를 선택해주세여   ----------");
+        System.out.print("1. 이름   2. 핸드폰 번호   3. 주소  : ");
+        String choose = sc.nextLine();
 
-            while ((bookLine = br_books.readLine()) != null) {
-                String[] bookSplit = bookLine.split("/");
-                if(id.equals(bookSplit[1])){
-                    LibraryManagerSystem.accessedBookDto = new BookDto();
-                    LibraryManagerSystem.accessedBookDto.setBook_ISBN(Integer.parseInt(bookSplit[0]));
-                    LibraryManagerSystem.accessedBookDto.setBook_id(Integer.parseInt(bookSplit[1]));
-                    LibraryManagerSystem.accessedBookDto.setBook_title(bookSplit[2]);
-                    LibraryManagerSystem.accessedBookDto.setBook_author(bookSplit[3]);
-                    LibraryManagerSystem.accessedBookDto.setBook_publisher(bookSplit[4]);
-                    LibraryManagerSystem.accessedBookDto.setBook_category(bookSplit[5]);
-                    LibraryManagerSystem.accessedBookDto.setBook_stock(Integer.parseInt(bookSplit[6]));
-                    LibraryManagerSystem.accessedBookDto.setIs_book_borrowed(bookSplit[7]);
-                    LibraryManagerSystem.accessedBookDto.setIs_book_reservation(Boolean.parseBoolean(bookSplit[8]));
-                }
+        String originInfo="";
+        String updateInfo="";
+
+            if (choose.equals("1"))  // 이름 수정
+            {
+                originInfo = UserSystem.accessedUserDto.getName();
+                System.out.print("수정할 이름을 입력해주세요 :");
+                updateInfo = sc.nextLine();
+            } else if (choose.equals("2"))  // 핸드폰 번호
+            {
+                originInfo = UserSystem.accessedUserDto.getPhone();
+                System.out.print("수정할 핸드폰번호 입력해주세요 :");
+                updateInfo = sc.nextLine();
+            } else if(choose.equals("3")) {   // 주소
+                originInfo = UserSystem.accessedUserDto.getAddress();
+                System.out.print("수정할 주소를 입력해주세요 :");
+                updateInfo = sc.nextLine();
             }
-        }catch(IOException e) { e.printStackTrace(); }
+            System.out.print(" 비밀번호를 입력하세요 : ");
+            String inputPWD = sc.nextLine();
+            String presentPWD = UserSystem.accessedUserDto.getPwd();
 
+            if (inputPWD.equals(presentPWD) && !originInfo.equals(" ")) {
+                try {
+                    if(choose.equals("1")) {
+                        UserSystem.accessedUserDto.setName(updateInfo);
+                    }else if(choose.equals("2")) {
+                        UserSystem.accessedUserDto.setPhone(updateInfo);
+                    }else if(choose.equals("3")){
+                        UserSystem.accessedUserDto.setAddress(updateInfo);
+                    }
+                    fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", originInfo);
+                    fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", originInfo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                System.out.println("------ 비밀번호가 틀렸습니다. \n------ 수정이 실패되었습니다.");
+            }
+        showProfile();
     }
 
     @Override
@@ -166,13 +193,13 @@ public class UserSystem implements UserDao, FileDao {
         Scanner sc = new Scanner(System.in);
         System.out.print("\n 비밀번호를 입력해주세요 : ");
         String pwdInput = sc.nextLine();
-        if(!pwdInput.equals(UserSystem.accessedUserDto.getPwd())){
+        if (!pwdInput.equals(UserSystem.accessedUserDto.getPwd())) {
             System.out.println(" ----> 비밀번호가 틀렸습니다. \n ----> 이전 화면으로 돌아갑니다.\n");
             libraryUserScreen.memuPrint();
-        }else{
+        } else {
             System.out.print(" 정말로 회원을 탈퇴하시겠습니까 (y/n)?  ");
             String answer = sc.nextLine();
-            if(answer.equals("y")){
+            if (answer.equals("y")) {
                 try {
                     String allPath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt";
                     String profilePath = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt";
@@ -189,12 +216,12 @@ public class UserSystem implements UserDao, FileDao {
                     while ((alluserLine = br_users.readLine()) != null) {
                         String[] userSplit = alluserLine.split("/");
                         if (!UserSystem.accessedUserDto.getId().equals(userSplit[0])) {
-                            bw_users.write(alluserLine+"\n");
+                            bw_users.write(alluserLine + "\n");
                         }
                         bw_users.flush();
                     }
 
-                    if(deleteFile.exists()) {
+                    if (deleteFile.exists()) {
                         deleteFile.delete();
                     } else {
                         System.out.println("파일이 존재하지 않습니다.");
@@ -207,10 +234,10 @@ public class UserSystem implements UserDao, FileDao {
 
                     System.out.println(" ------> 탈퇴되었습니다.");
                     loginScreen.memuPrint();
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else{
+            } else {
                 System.out.println(" ------> 취소되었습니다.");
                 libraryUserScreen.memuPrint();
             }
@@ -219,8 +246,7 @@ public class UserSystem implements UserDao, FileDao {
     }
 
     @Override
-    public boolean updateLendFile(String FilePath, String id) throws IOException
-    {
+    public boolean updateLendFile(String FilePath, String id) throws IOException {
         boolean result = false;
         File originFile = new File(FilePath);
         File tempFile = new File(FilePath + ".temp");
@@ -235,10 +261,10 @@ public class UserSystem implements UserDao, FileDao {
         ArrayList<String> newLendBook = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat todayformat = new SimpleDateFormat ( "yyyy-MM-dd");
+        SimpleDateFormat todayformat = new SimpleDateFormat("yyyy-MM-dd");
         Date time = new Date();
         String lend_date = todayformat.format(time);
-        cal.add(cal.DATE,+7);
+        cal.add(cal.DATE, +7);
         String return_date = todayformat.format(cal.getTime());
 
         newLendBook.add(LibraryManagerSystem.accessedBookDto.getBook_title());
@@ -251,17 +277,17 @@ public class UserSystem implements UserDao, FileDao {
         }
         while ((line = br.readLine()) != null) {
             String[] userSplit = line.split("/");
-            if(userSplit[0].equals(id)) {
+            if (userSplit[0].equals(id)) {
                 ArrayList<String> profile5 = new ArrayList<String>();
-                profile5.add(userSplit[5].substring(1,userSplit[5].length()-1));
+                profile5.add(userSplit[5].substring(1, userSplit[5].length() - 1));
 
-                String subStr = line.substring(line.length()-1,line.length());
-                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[7],UserSystem.accessedUserDto.getBorrowedLimit()) ;
-                repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
+                String subStr = line.substring(line.length() - 1, line.length());
+                repLine = line.substring(0, line.length() - 1) + subStr.replace(userSplit[7], UserSystem.accessedUserDto.getBorrowedLimit());
+                repLine = repLine.replace(userSplit[5], UserSystem.accessedUserDto.getLendBookList().toString());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
 
-            }else {
+            } else {
                 bw.write(line + "\n");
             }
             bw.flush();
@@ -291,27 +317,27 @@ public class UserSystem implements UserDao, FileDao {
         String line;
         String repLine;
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat todayformat = new SimpleDateFormat ( "yyyy-MM-dd");
-        cal.add(cal.DATE,+7);
+        SimpleDateFormat todayformat = new SimpleDateFormat("yyyy-MM-dd");
+        cal.add(cal.DATE, +7);
         String overdue_date = todayformat.format(cal.getTime());
 
 
         while ((line = br.readLine()) != null) {
             String[] userSplit = line.split("/");
-            if(userSplit[0].equals(id)) {
+            if (userSplit[0].equals(id)) {
                 // 재고 1개 증가 7
-                String subStr = line.substring(line.length()-1,line.length());
-                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[7],UserSystem.accessedUserDto.getBorrowedLimit()) ;
+                String subStr = line.substring(line.length() - 1, line.length());
+                repLine = line.substring(0, line.length() - 1) + subStr.replace(userSplit[7], UserSystem.accessedUserDto.getBorrowedLimit());
                 // 연체 날짜 입력 6
-                if(overdue_date.equals(UserSystem.accessedUserDto.getOverdueDate())) {
+                if (overdue_date.equals(UserSystem.accessedUserDto.getOverdueDate())) {
                     // 연체일때
                     repLine = repLine.replace(userSplit[6], UserSystem.accessedUserDto.getOverdueDate());
                 }
                 //  id는 대여리스트에서 제거 5
-                repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
+                repLine = repLine.replace(userSplit[5], UserSystem.accessedUserDto.getLendBookList().toString());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
-            }else {
+            } else {
                 bw.write(line + "\n");
             }
             bw.flush();
@@ -326,7 +352,7 @@ public class UserSystem implements UserDao, FileDao {
         }
     }
 
-    public void OverdueEnd(String FilePath, String id)throws IOException {
+    public void OverdueEnd(String FilePath, String id) throws IOException {
         boolean result = false;
         File originFile = new File(FilePath);
         File tempFile = new File(FilePath + ".temp");
@@ -341,11 +367,11 @@ public class UserSystem implements UserDao, FileDao {
 
         while ((line = br.readLine()) != null) {
             String[] userSplit = line.split("/");
-            if(userSplit[0].equals(id)) {
+            if (userSplit[0].equals(id)) {
                 repLine = line.replace(userSplit[6], UserSystem.accessedUserDto.getOverdueDate());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
-            }else {
+            } else {
                 bw.write(line + "\n");
             }
             bw.flush();
