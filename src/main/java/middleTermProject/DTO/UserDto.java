@@ -16,10 +16,13 @@ public class UserDto {
     private String name;
     private String phone;
     private String address;
-    // 처음엔 이거 0 으로 초기화
-    private String borrowedLimit;
     // 빌린 책 -> 책이름, 빌린날짜 ,반납날짜
     private ArrayList<String> lendBookList;
+    private String tempLendList;
+    private String OverdueDate;
+    // 처음엔 이거 0 으로 초기화
+    private String borrowedLimit;
+
 
 
     public String getId() {
@@ -78,7 +81,21 @@ public class UserDto {
         this.lendBookList = lendBookList;
     }
 
+    public String getOverdueDate() {
+        return OverdueDate;
+    }
 
+    public void setOverdueDate(String overdueDate) {
+        OverdueDate = overdueDate;
+    }
+
+    public String getTempLendList() {
+        return tempLendList;
+    }
+
+    public void setTempLendList(String tempLendList) {
+        this.tempLendList = tempLendList;
+    }
 }
 
 

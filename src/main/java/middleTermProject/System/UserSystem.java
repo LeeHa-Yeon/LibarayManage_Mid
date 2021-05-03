@@ -172,7 +172,6 @@ public class UserSystem implements UserDao, FileDao {
 
         String line;
         String repLine;
-        String repLine2;
         ArrayList<String> newLendBook = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
@@ -183,6 +182,7 @@ public class UserSystem implements UserDao, FileDao {
         String return_date = todayformat.format(cal.getTime());
 
         newLendBook.add(LibraryManagerSystem.accessedBookDto.getBook_title());
+        newLendBook.add(Integer.toString(LibraryManagerSystem.accessedBookDto.getBook_id()));
         newLendBook.add(lend_date);
         newLendBook.add(return_date);
 
@@ -196,7 +196,53 @@ public class UserSystem implements UserDao, FileDao {
                 profile5.add(userSplit[5].substring(1,userSplit[5].length()-1));
 
                 String subStr = line.substring(line.length()-1,line.length());
-                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[6],UserSystem.accessedUserDto.getBorrowedLimit()) ;
+                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[7],UserSystem.accessedUserDto.getBorrowedLimit()) ;
+                repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
+                bw.write(repLine, 0, repLine.length());
+                bw.newLine();
+
+            }else {
+                bw.write(line + "\n");
+            }
+            bw.flush();
+
+            result = true;
+        }
+        if (result) {
+            br.close();
+            bw.close();
+            originFile.delete();
+            tempFile.renameTo(originFile);
+        }
+        return result;
+    }
+
+    @Override
+    public void updateReturnFile(String FilePath, String id) throws IOException {
+        boolean result = false;
+        File originFile = new File(FilePath);
+        File tempFile = new File(FilePath + ".temp");
+
+        FileInputStream fileOriginStream = new FileInputStream(originFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileOriginStream));
+        FileOutputStream fileTempStream = new FileOutputStream(tempFile);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+
+        String line;
+        String repLine;
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat todayformat = new SimpleDateFormat ( "yyyy-MM-dd");
+        cal.add(cal.DATE,+7);
+        String overdue_date = todayformat.format(cal.getTime());
+
+
+        while ((line = br.readLine()) != null) {
+            String[] userSplit = line.split("/");
+            if(userSplit[0].equals(id)) {
+                // 재고 1개 증가
+                String subStr = line.substring(line.length()-1,line.length());
+                repLine = line.substring(0,line.length()-1) + subStr.replace(userSplit[7],UserSystem.accessedUserDto.getBorrowedLimit()) ;
+                // 연체 날짜 입력
                 repLine = repLine.replace(userSplit[5],UserSystem.accessedUserDto.getLendBookList().toString());
                 bw.write(repLine, 0, repLine.length());
                 bw.newLine();
@@ -213,6 +259,5 @@ public class UserSystem implements UserDao, FileDao {
             originFile.delete();
             tempFile.renameTo(originFile);
         }
-        return result;
     }
 }

@@ -65,8 +65,9 @@ public class LoginSystem implements LoginDao {
                     UserSystem.accessedUserDto.setPhone(profileSplit[3]);
                     UserSystem.accessedUserDto.setAddress(profileSplit[4]);
                     UserSystem.accessedUserDto.setLendBookList(profile5);
-                    UserSystem.accessedUserDto.setBorrowedLimit(profileSplit[6]);
-                   System.out.println("---->나중에 지워"+profileSplit[6]+"dd"+UserSystem.accessedUserDto.getBorrowedLimit());
+                    UserSystem.accessedUserDto.setOverdueDate(profileSplit[6]);
+                    UserSystem.accessedUserDto.setBorrowedLimit(profileSplit[7]);
+//                   System.out.println("---->나중에 지워"+profileSplit[6]+"dd"+UserSystem.accessedUserDto.getBorrowedLimit());
                     profile_br.close();
                     br.close();
                     return true;
@@ -121,8 +122,8 @@ public class LoginSystem implements LoginDao {
                 if(!idList.contains(newUser[0])) {
                     BufferedWriter all_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", true));
                     BufferedWriter profile_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + newUser[0] + "'s Info.txt", true));
-                    all_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"3"));
-                    profile_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"3"));
+                    all_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"정상","3"));
+                    profile_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s/%s", newUser[0], newUser[1], newUser[3], newUser[4], newUser[5],lendList,"정상","3"));
                     all_bw.newLine();
                     profile_bw.newLine();
                     all_bw.flush();
@@ -222,6 +223,7 @@ public class LoginSystem implements LoginDao {
         UserSystem.accessedUserDto.setName("로그인을 해주세요");
         UserSystem.accessedUserDto.setPhone("로그인을 해주세요");
         UserSystem.accessedUserDto.setAddress("로그인을 해주세요");
+        UserSystem.accessedUserDto.setOverdueDate("로그인을 해주세요");
         UserSystem.accessedUserDto.setBorrowedLimit("로그인을 해주세요");
         try {
             System.out.println("3초 뒤에 로그인 화면으로 이동합니다..\n");

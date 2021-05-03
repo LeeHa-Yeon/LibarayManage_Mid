@@ -8,6 +8,7 @@ import java.util.*;
 public class Test {
 
     public void testPrint() {
+
 //        String profileSplit = "[[아이무서워!, 2021-05-02, 2021-05-09]]";
 //        ArrayList<String> profile5 = new ArrayList<String>();
 //        profile5.add(profileSplit);

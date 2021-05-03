@@ -44,4 +44,39 @@ public class BookSystem implements FileDao {
         }
         return result;
     }
+
+    @Override
+    public void updateReturnFile(String FilePath, String id) throws IOException {
+        boolean result = false;
+        File originFile = new File(FilePath);
+        File tempFile = new File(FilePath + ".temp");
+
+        FileInputStream fileOriginStream = new FileInputStream(originFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileOriginStream));
+        FileOutputStream fileTempStream = new FileOutputStream(tempFile);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+
+        String line;
+        String repLine;
+
+        while ((line = br.readLine()) != null) {
+            String[] userSplit = line.split("/");
+            if(userSplit[1].equals(id)) {
+                repLine = line.replaceAll("대여중","대여가능");
+                bw.write(repLine, 0, repLine.length());
+                bw.newLine();
+            }else {
+                bw.write(line + "\n");
+            }
+            bw.flush();
+
+            result = true;
+        }
+        if (result) {
+            br.close();
+            bw.close();
+            originFile.delete();
+            tempFile.renameTo(originFile);
+        }
+    }
 }
