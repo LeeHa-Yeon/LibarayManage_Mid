@@ -5,7 +5,6 @@ import middleTermProject.Screen.LibraryManagerScreen;
 import middleTermProject.Screen.LibraryUserScreen;
 import middleTermProject.Screen.LoginScreen;
 import middleTermProject.System.*;
-import middleTermProject.Zdelete.Test;
 import org.springframework.context.annotation.*;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,8 +28,6 @@ public class JavaConfig {
     public FileSystem fileSystem(){ return new FileSystem(); }
     @Bean
     public BookSystem bookSystem(){ return new BookSystem();}
-    @Bean
-    public Test test(){ return new Test(); }
 
 
 

@@ -74,6 +74,7 @@ public class LibraryUserScreen implements SystemDao {
                         librarySystem.returnBook();
                     } else if (s == 4) {
                         System.out.println("\n-------------------- 도서 요청하기 ---------------------\n");
+                        userSystem.proposeBook();
                     }
                     break;
                 case 2:

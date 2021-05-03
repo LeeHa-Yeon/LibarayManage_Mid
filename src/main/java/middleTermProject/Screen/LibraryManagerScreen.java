@@ -41,7 +41,7 @@ public class LibraryManagerScreen implements SystemDao {
         switch(select) {
             case 1 :
                 System.out.println("\n-------------- 도서 관리 시스템 ----------------");
-                System.out.println("\t\t\t1. 새로운 책 추가하기\n  \t\t\t2. 책 정보 수정하기\n  \t\t\t3. 책 삭제하기\n  \t\t\t4. 전체보기 ");
+                System.out.println("\t\t\t1. 새로운 책 추가하기\n  \t\t\t2. 고객도서 요청 리스트 확인하기\n  \t\t\t3. 책 삭제하기\n  \t\t\t4. 전체보기 ");
                 System.out.println("----------------------------------------------");
                 System.out.print("\n 번호를 선택해주세요 : ");
                 s = sc.nextInt();
@@ -49,7 +49,14 @@ public class LibraryManagerScreen implements SystemDao {
                     libraryManagerSystem.addBook();
                     memuPrint();
                 }else if(s==2){
-                    libraryManagerSystem.updateBook();
+                    System.out.println("\n----- 고객도서 요청 리스트 확인하기");
+                    libraryManagerSystem.showApplyList();
+                    System.out.print("1. 고객 요청 책 추가  2. 뒤로가기 ");
+                    String answer = sc.next();
+                    if(answer.equals("1")) {
+                        System.out.println("");
+                        libraryManagerSystem.addBook();
+                    }
                     memuPrint();
                 }else if(s==3){
                     libraryManagerSystem.deleteBook();

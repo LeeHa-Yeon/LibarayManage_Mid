@@ -130,14 +130,20 @@ public class LibrarySystem implements LibraryDao {
         SimpleDateFormat format1 = new SimpleDateFormat("yyy-MM-dd");
         Date time = new Date();
         String currentDate = format1.format(time);
-        int Overdueing = dateCompareTo(currentDate, UserSystem.accessedUserDto.getOverdueDate());
+        int Overdueing;
+        if (UserSystem.accessedUserDto.getOverdueDate().equals("정상")){
+            Overdueing = 1;
+        }else{
+            Overdueing = dateCompareTo(currentDate, UserSystem.accessedUserDto.getOverdueDate());
+        }
+
 
         if(Overdueing<1){
             System.out.println("연체된 기록이 있어 책을 "+UserSystem.accessedUserDto.getOverdueDate()+" 까지 대출할 수 없습니다.");
             System.out.println("---------------------------------------\n");
             libraryUserScreen.memuPrint();
         }else{
-            UserSystem.accessedUserDto.setOverdueDate("\"정상\"");
+            UserSystem.accessedUserDto.setOverdueDate("정상");
             try {
                 userSystem.OverdueEnd("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", UserSystem.accessedUserDto.getId());
                 userSystem.OverdueEnd("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", UserSystem.accessedUserDto.getId());

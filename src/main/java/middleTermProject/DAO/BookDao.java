@@ -1,5 +1,7 @@
 package middleTermProject.DAO;
 
+import java.io.IOException;
+
 public interface BookDao {
 
     // 도서관 관리자만 접근 권한 가지고 있음
@@ -10,8 +12,10 @@ public interface BookDao {
     // 책 삭제하기
     public void deleteBook();
 
-    // 책 수정하기
-    public void updateBook();
+    // 고객 도서 요청 확인하기
+    public void showApplyList();
+
+    public void changeState(String path,String id) throws IOException;
 
 
 }

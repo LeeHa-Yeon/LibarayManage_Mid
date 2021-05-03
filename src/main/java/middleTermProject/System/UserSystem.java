@@ -2,7 +2,6 @@ package middleTermProject.System;
 
 import middleTermProject.DAO.FileDao;
 import middleTermProject.DAO.UserDao;
-import middleTermProject.DTO.BookDto;
 import middleTermProject.DTO.UserDto;
 import middleTermProject.Screen.LibraryUserScreen;
 import middleTermProject.Screen.LoginScreen;
@@ -14,6 +13,8 @@ import java.util.*;
 
 public class UserSystem implements UserDao, FileDao {
 
+    @Autowired
+    LibraryManagerSystem libraryManagerSystem;
     @Autowired
     LibraryUserScreen libraryUserScreen;
     @Autowired
@@ -146,45 +147,45 @@ public class UserSystem implements UserDao, FileDao {
         System.out.print("1. 이름   2. 핸드폰 번호   3. 주소  : ");
         String choose = sc.nextLine();
 
-        String originInfo="";
-        String updateInfo="";
+        String originInfo = "";
+        String updateInfo = "";
 
-            if (choose.equals("1"))  // 이름 수정
-            {
-                originInfo = UserSystem.accessedUserDto.getName();
-                System.out.print("수정할 이름을 입력해주세요 :");
-                updateInfo = sc.nextLine();
-            } else if (choose.equals("2"))  // 핸드폰 번호
-            {
-                originInfo = UserSystem.accessedUserDto.getPhone();
-                System.out.print("수정할 핸드폰번호 입력해주세요 :");
-                updateInfo = sc.nextLine();
-            } else if(choose.equals("3")) {   // 주소
-                originInfo = UserSystem.accessedUserDto.getAddress();
-                System.out.print("수정할 주소를 입력해주세요 :");
-                updateInfo = sc.nextLine();
-            }
-            System.out.print(" 비밀번호를 입력하세요 : ");
-            String inputPWD = sc.nextLine();
-            String presentPWD = UserSystem.accessedUserDto.getPwd();
+        if (choose.equals("1"))  // 이름 수정
+        {
+            originInfo = UserSystem.accessedUserDto.getName();
+            System.out.print("수정할 이름을 입력해주세요 :");
+            updateInfo = sc.nextLine();
+        } else if (choose.equals("2"))  // 핸드폰 번호
+        {
+            originInfo = UserSystem.accessedUserDto.getPhone();
+            System.out.print("수정할 핸드폰번호 입력해주세요 :");
+            updateInfo = sc.nextLine();
+        } else if (choose.equals("3")) {   // 주소
+            originInfo = UserSystem.accessedUserDto.getAddress();
+            System.out.print("수정할 주소를 입력해주세요 :");
+            updateInfo = sc.nextLine();
+        }
+        System.out.print(" 비밀번호를 입력하세요 : ");
+        String inputPWD = sc.nextLine();
+        String presentPWD = UserSystem.accessedUserDto.getPwd();
 
-            if (inputPWD.equals(presentPWD) && !originInfo.equals(" ")) {
-                try {
-                    if(choose.equals("1")) {
-                        UserSystem.accessedUserDto.setName(updateInfo);
-                    }else if(choose.equals("2")) {
-                        UserSystem.accessedUserDto.setPhone(updateInfo);
-                    }else if(choose.equals("3")){
-                        UserSystem.accessedUserDto.setAddress(updateInfo);
-                    }
-                    fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", originInfo);
-                    fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", originInfo);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (inputPWD.equals(presentPWD) && !originInfo.equals(" ")) {
+            try {
+                if (choose.equals("1")) {
+                    UserSystem.accessedUserDto.setName(updateInfo);
+                } else if (choose.equals("2")) {
+                    UserSystem.accessedUserDto.setPhone(updateInfo);
+                } else if (choose.equals("3")) {
+                    UserSystem.accessedUserDto.setAddress(updateInfo);
                 }
-            }else{
-                System.out.println("------ 비밀번호가 틀렸습니다. \n------ 수정이 실패되었습니다.");
+                fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/Profile/" + UserSystem.accessedUserDto.getId() + "'s Info.txt", originInfo);
+                fileSystem.UpdateInfoFile("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/UserInfo/allUserInfo.txt", originInfo);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        } else {
+            System.out.println("------ 비밀번호가 틀렸습니다. \n------ 수정이 실패되었습니다.");
+        }
         showProfile();
     }
 
@@ -384,5 +385,57 @@ public class UserSystem implements UserDao, FileDao {
             originFile.delete();
             tempFile.renameTo(originFile);
         }
+    }
+
+    public void proposeBook() {
+        Scanner sc = new Scanner(System.in);
+        String[] bookSchema = {"isbn", "도서고유번호", "책이름", "지은이", "출판사", "카테고리"};
+        String[] proposeBook = new String[bookSchema.length];
+
+        for (int i = 0; i < bookSchema.length; i++) {
+            System.out.print(bookSchema[i] + " 입력 : ");
+            proposeBook[i] = sc.next();
+        }
+
+        try {
+            // 책제목 중복 찾기
+            BufferedReader br = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookApplyList.txt"));
+            String userLine;
+            List<String> titleList = new ArrayList<String>();
+
+            while ((userLine = br.readLine()) != null) {
+                String[] userSplit = userLine.split("/");
+                titleList.add(userSplit[2]);
+            }
+
+            if (!titleList.contains(proposeBook[2])) {
+                BufferedWriter all_bw = new BufferedWriter(new FileWriter("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookApplyList.txt", true));
+                all_bw.write(String.format("%s/%s/%s/%s/%s/%s/%s", proposeBook[0], proposeBook[1], proposeBook[2], proposeBook[3], proposeBook[4],proposeBook[5],"대기중"));
+                all_bw.newLine();
+                all_bw.flush();
+                all_bw.close();
+                //여기까지 수정
+
+                System.out.println("-----> 신청이 완료되었습니다. ");
+                System.out.println("\n----->  도서관 신청 목록");
+                System.out.println("--------------------------------------------------------------");
+                libraryManagerSystem.showApplyList();
+                libraryUserScreen.memuPrint();
+
+            } else {
+                System.out.println("-----> 이미 신청된 책입니다. \n");
+                try {
+                    System.out.println("3초 뒤에 다시 이전 화면으로 돌아갑니다.\n");
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    System.err.format("IOException: %s%n", e);
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("-----> 실패 ");
+            e.printStackTrace();
+        }
+
     }
 }

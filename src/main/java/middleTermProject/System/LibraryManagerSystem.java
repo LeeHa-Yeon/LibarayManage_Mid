@@ -27,8 +27,10 @@ public class LibraryManagerSystem implements BookDao {
 
         try {
             String booksPwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookInfoList.txt";
+            String proposePwd = "/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookApplyList.txt";
             BufferedReader br_book = new BufferedReader(new FileReader(booksPwd));
             String bookLine = br_book.readLine();
+
             List<Integer> isbnList = new ArrayList<Integer>();
             List<Integer> idList = new ArrayList<Integer>();
             List<String> titleList = new ArrayList<String>();
@@ -64,6 +66,8 @@ public class LibraryManagerSystem implements BookDao {
 
                 bw_books.close();
                 bw_book.close();
+
+                changeState(proposePwd,newBook[1]);
 
                 System.out.println("\n----->  책 등록이 성공적으로 이루어졌습니다.");
             }
@@ -176,7 +180,66 @@ public class LibraryManagerSystem implements BookDao {
     }
 
     @Override
-    public void updateBook() {
-        System.out.println("----> 차후에 구현할 계획");
+    public void showApplyList() {
+        try {
+            BufferedReader br_book = new BufferedReader(new FileReader("/Users/hayeon/IdeaProjects/LibarayManage_Mid/Info/BookInfo/bookApplyList.txt"));
+            String bookLine;
+
+            System.out.println("  도서번호 ㅣ           제목            ㅣ 지은이 ㅣ 출판사 ㅣ   카테고리    |   상태   ");
+
+            while ((bookLine = br_book.readLine()) != null) {
+                String[] bookSplit = bookLine.split("/");
+                System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
+                if (bookSplit[2].length() < 8) {
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t" + bookSplit[5] + "\t" + bookSplit[6]);
+                } else if (bookSplit[2].length() > 8 && bookSplit[2].length() < 13) {
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t" + bookSplit[5] + "\t" + bookSplit[6]);
+                } else {
+                    System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t" + bookSplit[5] + "\t" + bookSplit[6]);
+                }
+            }
+            System.out.println(" ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽\n");
+        } catch (IOException e) {
+            System.out.println("-----> 보기 실패 ");
+            e.printStackTrace();
+        }
     }
+
+    @Override
+    public void changeState(String FilePath, String id) throws IOException {
+        boolean result = false;
+        File originFile = new File(FilePath);
+        File tempFile = new File(FilePath + ".temp");
+
+        FileInputStream fileOriginStream = new FileInputStream(originFile);
+        BufferedReader br = new BufferedReader(new InputStreamReader(fileOriginStream));
+        FileOutputStream fileTempStream = new FileOutputStream(tempFile);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileTempStream));
+
+        String line;
+        String repLine;
+
+        while ((line = br.readLine()) != null) {
+            String[] bookSplit = line.split("/");
+            if(bookSplit[1].equals(id)) {
+                repLine = line.replace("대기중","등록완료");
+                bw.write(repLine, 0, repLine.length());
+                bw.newLine();
+            }else {
+                bw.write(line + "\n");
+            }
+            bw.flush();
+
+            result = true;
+        }
+        if (result) {
+            br.close();
+            bw.close();
+            originFile.delete();
+            tempFile.renameTo(originFile);
+        }
+    }
+
+
+
 }
