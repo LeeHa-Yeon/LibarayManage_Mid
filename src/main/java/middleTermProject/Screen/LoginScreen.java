@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
-// 해야할 것 : 회원 정보 읽기 , 회원 정보 수정
-
 @Component
 public class LoginScreen implements SystemDao {
 

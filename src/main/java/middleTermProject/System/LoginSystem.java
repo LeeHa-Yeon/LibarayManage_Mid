@@ -74,6 +74,9 @@ public class LoginSystem implements LoginDao {
                     profile_br.close();
                     br.close();
                     return false;
+
+
+
                 }
             } else {
                 // 아이디가 없을 경우
