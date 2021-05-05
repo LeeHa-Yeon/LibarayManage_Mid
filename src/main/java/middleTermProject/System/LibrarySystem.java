@@ -37,7 +37,7 @@ public class LibrarySystem implements LibraryDao {
                 if (bookSplit[2].length() < 4) {
                     System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t\t" + bookSplit[7]);
                 }else if (bookSplit[2].length() >= 4 && bookSplit[2].length() < 8) {
-                    System.out.println(bookSplit[2]+""+bookSplit[2].length());
+                    //System.out.println(bookSplit[2]+""+bookSplit[2].length());
                     System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t\t" + bookSplit[7]);
                 }
                 else if (bookSplit[2].length() >= 8 && bookSplit[2].length() < 13) {
@@ -70,7 +70,7 @@ public class LibrarySystem implements LibraryDao {
                 if (search_title.equals(bookSplit[2])) {
                     System.out.println(" ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻");
                     if (bookSplit[2].length() < 4) {
-                        System.out.println(bookSplit[1]+""+bookSplit[1].length());
+                        //System.out.println(bookSplit[1]+""+bookSplit[1].length());
                         System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t\t" + bookSplit[7]);
                     }else if (bookSplit[2].length() > 4 && bookSplit[2].length() < 8) {
                         System.out.println("ㅣ\t" + bookSplit[1] + "\tㅣ" + bookSplit[2] + "\t\t\t\t" + bookSplit[3] + "\t  " + bookSplit[4] + "\t\t" + bookSplit[5] + "\t\t" + bookSplit[7]);

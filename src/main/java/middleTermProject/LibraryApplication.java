@@ -16,10 +16,6 @@ public class LibraryApplication {
         LoginScreen loginScreen = (LoginScreen) ctx.getBean("loginScreen");
         loginScreen.memuPrint();
 
-//        Test test = (Test) ctx.getBean("test");
-//        test.testPrint();
-
-
         ctx.close();
     }
 }
